@@ -1,0 +1,16 @@
+domain: plural.sh
+layout:
+- go.kubebuilder.io/v3
+projectName: test-harness
+repo: github.com/pluralsh/test-harness
+resources:
+- api:
+    crdVersion: v1
+    namespaced: true
+  controller: true
+  domain: plural.sh
+  group: test
+  kind: TestSuite
+  path: github.com/pluralsh/test-harness/api/v1alpha1
+  version: v1alpha1
+version: "3"

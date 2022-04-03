@@ -1,0 +1,20 @@
+# permissions for end users to view testsuites.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: testsuite-viewer-role
+rules:
+- apiGroups:
+  - test.plural.sh
+  resources:
+  - testsuites
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - test.plural.sh
+  resources:
+  - testsuites/status
+  verbs:
+  - get
