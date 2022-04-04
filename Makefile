@@ -72,7 +72,7 @@ docker-push: ## Push docker image with the manager.
 build-plural:
 	kustomize build config/crd/ -o plural/helm/test-harness/crds/test.plural.sh_testsuites.yaml
 
-apply-plural: build-plural
+apply-plural:
 	cd plural && plural apply
 
 ##@ Deployment
