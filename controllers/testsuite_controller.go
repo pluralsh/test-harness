@@ -27,9 +27,7 @@ import (
 	"k8s.io/apimachinery/pkg/types"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
-	"sigs.k8s.io/controller-runtime/pkg/handler"
-	"sigs.k8s.io/controller-runtime/pkg/reconcile"
-	"sigs.k8s.io/controller-runtime/pkg/source"
+	"sigs.k8s.io/controller-runtime/pkg/controller/controllerutil"
 
 	argov1alpha1 "github.com/argoproj/argo-workflows/v3/pkg/apis/workflow/v1alpha1"
 	testv1alpha1 "github.com/pluralsh/test-harness/api/v1alpha1"
@@ -78,6 +76,10 @@ func (r *TestSuiteReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 			if status, ok := statuses[step.Name]; ok {
 				status.PluralId = step.Id
 			}
+		}
+
+		if err := controllerutil.SetControllerReference(&suite, wf, r.Scheme); err != nil {
+			return ctrl.Result{}, err
 		}
 
 		if err := r.Create(ctx, wf); err != nil {
@@ -170,19 +172,6 @@ func suiteToWorkflow(suite *testv1alpha1.TestSuite) (workflow *argov1alpha1.Work
 func (r *TestSuiteReconciler) SetupWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewControllerManagedBy(mgr).
 		For(&testv1alpha1.TestSuite{}).
-		Watches(&source.Kind{Type: &argov1alpha1.Workflow{}}, handler.EnqueueRequestsFromMapFunc(func(obj client.Object) []reconcile.Request {
-			workflow := obj.(*argov1alpha1.Workflow)
-			val, ok := workflow.Annotations[ownedAnnotation]
-			if !ok {
-				return []reconcile.Request{}
-			}
-
-			return []reconcile.Request{
-				{NamespacedName: types.NamespacedName{
-					Namespace: workflow.Namespace,
-					Name:      val,
-				}},
-			}
-		})).
+		Owns(&argov1alpha1.Workflow{}).
 		Complete(r)
 }
