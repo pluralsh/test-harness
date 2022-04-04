@@ -1,0 +1,7 @@
+name: test-harness
+description: test-harness deployed on plural
+category: DEVOPS
+private: true
+icon: plural/icons/plural-logo.png
+darkIcon: plural/icons/plural-white.png
+notes: plural/notes.tpl

@@ -1,0 +1,14 @@
+name: test-harness-gcp
+description: Installs test-harness on an aws eks cluster
+provider: GCP
+dependencies:
+- repo: bootstrap
+  name: gcp-k8s
+sections:
+- name: test-harness
+  configuration: []
+  items:
+  - type: TERRAFORM
+    name: kube-base
+  - type: HELM
+    name: test-harness

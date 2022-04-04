@@ -3,6 +3,7 @@
 IMG ?= controller:latest
 # ENVTEST_K8S_VERSION refers to the version of kubebuilder assets to be downloaded by envtest binary.
 ENVTEST_K8S_VERSION = 1.22
+VSN := `cat VERSION`
 
 # Get the currently used golang install path (in GOPATH/bin, unless GOBIN is set)
 ifeq (,$(shell go env GOBIN))
@@ -60,11 +61,19 @@ build: generate fmt vet ## Build manager binary.
 run: manifests generate fmt vet ## Run a controller from your host.
 	go run ./main.go
 
-docker-build: test ## Build docker image with the manager.
-	docker build -t ${IMG} .
+docker-build: ## Build docker image with the manager.
+	docker build -t gcr.io/pluralsh/test-harness:${VSN} \
+							 -t dkr.plural.sh/test-harness/operator:${VSN} .
 
 docker-push: ## Push docker image with the manager.
-	docker push ${IMG}
+	docker push gcr.io/pluralsh/test-harness:${VSN}
+	docker push dkr.plural.sh/test-harness/operator:${VSN}
+
+build-plural:
+	kustomize build config/crd/ -o plural/helm/test-harness/crds/test.plural.sh_testsuites.yaml
+
+apply-plural: build-plural
+	cd plural && plural apply
 
 ##@ Deployment
 

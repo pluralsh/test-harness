@@ -1,0 +1,19 @@
+apiVersion: plural.sh/v1alpha1
+kind: Dependencies
+metadata:
+  application: true
+  description: Deploys test-harness operator
+spec:
+  dependencies:
+  - type: helm
+    name: bootstrap
+    repo: bootstrap
+    version: '>= 0.5.1'
+  - type: helm
+    name: argo-workflows
+    repo: argo-workflows
+    version: '>= 0.1.10'
+  - type: terraform
+    name: kube-base
+    repo: test-harness
+    version: '>= 0.1.0'
