@@ -3,6 +3,7 @@ package plural
 import (
 	"context"
 	"github.com/michaeljguarino/graphql"
+	"os"
 )
 
 type Config struct {
@@ -13,6 +14,13 @@ type Config struct {
 type Client struct {
 	gqlClient *graphql.Client
 	config    *Config
+}
+
+func NewConfig() *Config {
+	return &Config{
+		Token:    os.Getenv("PLURAL_ACCESS_TOKEN"),
+		Endpoint: os.Getenv("PLURAL_ENDPOINT"),
+	}
 }
 
 func NewClient(conf *Config) *Client {

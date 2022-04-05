@@ -28,8 +28,18 @@ spec:
         {{ end }}
         image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
         name: manager
+        envFrom:
+        - secretRef:
+            name: operator-env
         securityContext:
           allowPrivilegeEscalation: false
+        ports:
+        - containerPort: 8081
+          name: health
+          protocol: TCP
+        - containerPort: 8080
+          name: metrics
+          protocol: TCP
         livenessProbe:
           httpGet:
             path: /healthz
