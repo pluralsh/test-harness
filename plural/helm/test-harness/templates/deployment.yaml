@@ -22,8 +22,10 @@ spec:
       containers:
       - command:
         - /manager
+        {{ if gt .Values.replicaCount 1.0 }}
         args:
         - --leader-elect
+        {{ end }}
         image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
         name: manager
         securityContext:
