@@ -31,6 +31,8 @@ import (
 
 	argov1alpha1 "github.com/argoproj/argo-workflows/v3/pkg/apis/workflow/v1alpha1"
 	testv1alpha1 "github.com/pluralsh/test-harness/api/v1alpha1"
+	corev1 "k8s.io/api/core/v1"
+	rbacv1 "k8s.io/api/rbac/v1"
 )
 
 // TestSuiteReconciler reconciles a TestSuite object
@@ -42,8 +44,9 @@ type TestSuiteReconciler struct {
 }
 
 const (
-	ownedAnnotation = "test.plural.sh/owned-by"
-	entrypointName  = "plrl-entrypoint"
+	ownedAnnotation    = "test.plural.sh/owned-by"
+	entrypointName     = "plrl-entrypoint"
+	serviceAccountName = "argo-executor"
 )
 
 //+kubebuilder:rbac:groups=test.plural.sh,resources=testsuites,verbs=get;list;watch;create;update;patch;delete
@@ -82,6 +85,14 @@ func (r *TestSuiteReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 			return ctrl.Result{}, err
 		}
 
+		if err := r.createServiceAccount(ctx, wf.Namespace, serviceAccountName); err != nil {
+			return ctrl.Result{}, err
+		}
+
+		if err := r.addMinimalRole(ctx, wf.Namespace, serviceAccountName); err != nil {
+			return ctrl.Result{}, err
+		}
+
 		if err := r.Create(ctx, &wf); err != nil {
 			log.Error(err, "failed to create workflow")
 			return ctrl.Result{}, err
@@ -114,6 +125,33 @@ func (r *TestSuiteReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 	}
 
 	return ctrl.Result{}, nil
+}
+
+func (r *TestSuiteReconciler) createServiceAccount(ctx context.Context, namespace, sa string) error {
+	var serviceaccount corev1.ServiceAccount
+	if err := r.Get(ctx, types.NamespacedName{Name: sa, Namespace: namespace}, &serviceaccount); err != nil {
+		serviceaccount.Name = sa
+		serviceaccount.Namespace = namespace
+		return r.Create(ctx, &serviceaccount)
+	}
+	return nil
+}
+
+func (r *TestSuiteReconciler) addMinimalRole(ctx context.Context, namespace, sa string) error {
+	var crb rbacv1.ClusterRoleBinding
+	name := fmt.Sprintf("%s-%s-argo-minimal-role", namespace, sa)
+	if err := r.Get(ctx, types.NamespacedName{Name: name}, &crb); err != nil {
+		crb.Name = name
+		crb.Subjects = []rbacv1.Subject{{Kind: "ServiceAccount", APIGroup: "", Name: sa, Namespace: namespace}}
+		crb.RoleRef = rbacv1.RoleRef{
+			APIGroup: "rbac.authorization.k8s.io",
+			Kind:     "ClusterRole",
+			Name:     "argo-workflow-minimal-role",
+		}
+
+		return r.Create(ctx, &crb)
+	}
+	return nil
 }
 
 func syncWorkflowStatus(wf *argov1alpha1.Workflow, suite *testv1alpha1.TestSuite) {
