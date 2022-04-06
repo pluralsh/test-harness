@@ -78,11 +78,11 @@ func (r *TestSuiteReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 			}
 		}
 
-		if err := controllerutil.SetControllerReference(&suite, wf, r.Scheme); err != nil {
+		if err := controllerutil.SetControllerReference(&suite, &wf, r.Scheme); err != nil {
 			return ctrl.Result{}, err
 		}
 
-		if err := r.Create(ctx, wf); err != nil {
+		if err := r.Create(ctx, &wf); err != nil {
 			log.Error(err, "failed to create workflow")
 			return ctrl.Result{}, err
 		}
@@ -126,7 +126,7 @@ func syncWorkflowStatus(wf *argov1alpha1.Workflow, suite *testv1alpha1.TestSuite
 	}
 }
 
-func suiteToWorkflow(suite *testv1alpha1.TestSuite) (workflow *argov1alpha1.Workflow) {
+func suiteToWorkflow(suite *testv1alpha1.TestSuite) (workflow argov1alpha1.Workflow) {
 	name := fmt.Sprintf("%s-%s", suite.Name, utils.RandomStr(8))
 	workflow.Name = name
 	workflow.Namespace = suite.Namespace
