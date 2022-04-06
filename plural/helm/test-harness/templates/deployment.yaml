@@ -28,7 +28,7 @@ spec:
         {{ end }}
         image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
         name: manager
-        pullPolicy: {{ .Values.image.pullPolicy }}
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
         envFrom:
         - secretRef:
             name: operator-env

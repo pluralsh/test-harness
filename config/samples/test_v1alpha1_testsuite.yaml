@@ -10,6 +10,7 @@ spec:
   - name: echo
     description: it will echo hello world
     template:
-      image: busybox:latest
-      command: [echo]
-      args: ["hello world"]
+      container:
+        image: busybox:latest
+        command: [echo]
+        args: ["hello world"]

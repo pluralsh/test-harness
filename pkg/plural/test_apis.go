@@ -14,7 +14,7 @@ const (
 )
 
 type TestStep struct {
-	Id          string `json:"omitempty"`
+	Id          string `json:"id,omitempty"`
 	Name        string
 	Description string
 	Status      Status
@@ -22,7 +22,7 @@ type TestStep struct {
 }
 
 type Test struct {
-	Id         string `json:"omitempty"`
+	Id         string `json:"id,omitempty"`
 	Status     Status
 	PromoteTag string
 	Steps      []*TestStep
@@ -67,7 +67,7 @@ func (client *Client) CreateTest(repo string, test *Test) (result *Test, err err
 	}
 	req := client.Build(createTest)
 	req.Var("name", repo)
-	req.Var("attributes", test)
+	req.Var("attrs", test)
 	err = client.Run(req, &resp)
 	result = resp.CreateTest
 	return
@@ -80,7 +80,7 @@ func (client *Client) UpdateTest(test *Test) (result *Test, err error) {
 	req := client.Build(updateTest)
 	req.Var("id", test.Id)
 	test.Id = "" // hack to bypass serialization
-	req.Var("attributes", test)
+	req.Var("attrs", test)
 	err = client.Run(req, &resp)
 	result = resp.UpdateTest
 	return

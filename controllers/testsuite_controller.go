@@ -43,7 +43,7 @@ type TestSuiteReconciler struct {
 
 const (
 	ownedAnnotation = "test.plural.sh/owned-by"
-	entrypointName  = "__entrypoint__"
+	entrypointName  = "plrl-entrypoint"
 )
 
 //+kubebuilder:rbac:groups=test.plural.sh,resources=testsuites,verbs=get;list;watch;create;update;patch;delete
@@ -64,7 +64,7 @@ func (r *TestSuiteReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 		// suite hasn't been set up yet so set it up
 		wf := suiteToWorkflow(&suite)
 		plrl := suiteToPluralTest(&suite)
-		tst, err := r.Plural.CreateTest(suite.Spec.Repository, plrl)
+		tst, err := r.Plural.CreateTest(suite.Spec.Repository, &plrl)
 		if err != nil {
 			log.Error(err, "failed to create plural test")
 			return ctrl.Result{}, err
@@ -103,7 +103,7 @@ func (r *TestSuiteReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 
 	syncWorkflowStatus(&wf, &suite)
 	plrl := suiteToPluralTest(&suite)
-	if _, err := r.Plural.UpdateTest(plrl); err != nil {
+	if _, err := r.Plural.UpdateTest(&plrl); err != nil {
 		log.Error(err, "failed to update plural test")
 		return ctrl.Result{}, nil
 	}
@@ -134,37 +134,37 @@ func suiteToWorkflow(suite *testv1alpha1.TestSuite) (workflow argov1alpha1.Workf
 	workflow.Annotations[ownedAnnotation] = suite.Name
 
 	workflow.Spec.Entrypoint = entrypointName
-	workflow.Spec.Templates = make([]argov1alpha1.Template, 0)
+	templates := make([]argov1alpha1.Template, 0)
 	for _, step := range suite.Spec.Steps {
 		step.Template.Name = step.Name
-		workflow.Spec.Templates = append(workflow.Spec.Templates, *step.Template)
+		templates = append(templates, *step.Template)
 	}
 
 	curr := suite.Spec.Steps[0].Name
-	dag := &argov1alpha1.DAGTemplate{
-		Tasks: []argov1alpha1.DAGTask{{Name: curr, Template: curr}},
-	}
+	dag := &argov1alpha1.DAGTemplate{}
+	tasks := []argov1alpha1.DAGTask{{Name: curr, Template: curr}}
 	for _, step := range suite.Spec.Steps[1:] {
-		dag.Tasks = append(dag.Tasks, argov1alpha1.DAGTask{
+		tasks = append(tasks, argov1alpha1.DAGTask{
 			Name:         step.Name,
 			Template:     step.Name,
 			Dependencies: []string{curr},
 		})
 		curr = step.Name
 	}
-	workflow.Spec.Templates = append(workflow.Spec.Templates, argov1alpha1.Template{DAG: dag, Name: entrypointName})
+	dag.Tasks = tasks
+	workflow.Spec.Templates = append(templates, argov1alpha1.Template{DAG: dag, Name: entrypointName})
 
 	// wire in workflow details to the base suite resource
 	suite.Status.WorkflowName = name
 	suite.Status.Status = plural.StatusQueued
-	suite.Status.Steps = make([]*testv1alpha1.StepStatus, 0)
+	steps := make([]*testv1alpha1.StepStatus, 0)
 	for _, step := range suite.Spec.Steps {
-		suite.Status.Steps = append(suite.Status.Steps, &testv1alpha1.StepStatus{
+		steps = append(steps, &testv1alpha1.StepStatus{
 			Name:   step.Name,
 			Status: plural.StatusQueued,
 		})
 	}
-
+	suite.Status.Steps = steps
 	return
 }
 

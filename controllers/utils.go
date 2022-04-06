@@ -5,22 +5,25 @@ import (
 	"github.com/pluralsh/test-harness/pkg/plural"
 )
 
-func suiteToPluralTest(suite *testv1alpha1.TestSuite) (test *plural.Test) {
+func suiteToPluralTest(suite *testv1alpha1.TestSuite) (test plural.Test) {
 	test.Id = suite.Status.PluralId
-	test.PromoteTag = suite.Spec.PromoteTag
 	test.Status = suite.Status.Status
+	test.PromoteTag = suite.Spec.PromoteTag
 	test.Steps = make([]*plural.TestStep, 0)
 
 	statuses := stepStatuses(suite)
 	for _, step := range suite.Spec.Steps {
-		if status, ok := statuses[step.Name]; ok {
-			test.Steps = append(test.Steps, &plural.TestStep{
-				Id:          status.PluralId,
-				Name:        step.Name,
-				Description: step.Description,
-				Status:      status.Status,
-			})
+		status, ok := statuses[step.Name]
+		stepStatus := plural.StatusQueued
+		if ok {
+			stepStatus = status.Status
 		}
+		test.Steps = append(test.Steps, &plural.TestStep{
+			Id:          status.PluralId,
+			Name:        step.Name,
+			Description: step.Description,
+			Status:      stepStatus,
+		})
 	}
 
 	return
