@@ -51,6 +51,8 @@ const (
 
 //+kubebuilder:rbac:groups=test.plural.sh,resources=testsuites,verbs=get;list;watch;create;update;patch;delete
 //+kubebuilder:rbac:groups=argoproj.io,resources=workflows,verbs=get;list;watch;create;update;patch;delete
+//+kubebuilder:rbac:groups=core,resources=serviceaccounts,verbs=get;list;watch;create;update;patch;delete
+//+kubebuilder:rbac:groups=rbac.authorization.k8s.io,resources=clusterrolebindings,verbs=get;create;list;watch
 //+kubebuilder:rbac:groups=test.plural.sh,resources=testsuites/status,verbs=get;update;patch
 //+kubebuilder:rbac:groups=test.plural.sh,resources=testsuites/finalizers,verbs=update
 
