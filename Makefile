@@ -64,10 +64,14 @@ run: manifests generate fmt vet ## Run a controller from your host.
 docker-build: ## Build docker image with the manager.
 	docker build -t gcr.io/pluralsh/test-harness:${VSN} \
 							 -t dkr.plural.sh/test-harness/operator:${VSN} .
+	docker build -t gcr.io/pluralsh/test-base:${VSN} \
+							 -t dkr.plural.sh/test-harness/test-base:${VSN} dockerfiles
 
 docker-push: ## Push docker image with the manager.
 	docker push gcr.io/pluralsh/test-harness:${VSN}
 	docker push dkr.plural.sh/test-harness/operator:${VSN}
+	docker push gcr.io/pluralsh/test-base:${VSN}
+	docker push dkr.plural.sh/test-harness/test-base:${VSN}
 
 build-plural:
 	kustomize build config/crd/ -o plural/helm/test-harness/crds/test.plural.sh_testsuites.yaml

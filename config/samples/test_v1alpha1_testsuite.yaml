@@ -7,10 +7,9 @@ spec:
   repository: plural
   promoteTag: warm
   steps:
-  - name: echo
-    description: it will echo hello world
+  - name: watch
+    description: it wait until the app crd is ready
     template:
       container:
-        image: busybox:latest
-        command: [echo]
-        args: ["hello world"]
+        image: gcr.io/pluralsh/test-base:0.1.4
+        args: ["plural"]
