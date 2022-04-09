@@ -7,4 +7,4 @@ RUN chmod +x /usr/local/bin/kubectl && kubectl --help
 COPY watch.sh watch.sh
 RUN chmod +x watch.sh && mv watch.sh /usr/local/bin/watch.sh
 
-CMD ["/usr/local/bin/watch.sh"]
+ENTRYPOINT ["/usr/local/bin/watch.sh"]
