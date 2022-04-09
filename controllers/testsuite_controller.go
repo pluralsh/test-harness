@@ -174,6 +174,7 @@ func suiteToWorkflow(suite *testv1alpha1.TestSuite) (workflow argov1alpha1.Workf
 	workflow.Annotations[ownedAnnotation] = suite.Name
 
 	workflow.Spec.Entrypoint = entrypointName
+	workflow.Spec.ServiceAccountName = serviceAccountName
 	templates := make([]argov1alpha1.Template, 0)
 	for _, step := range suite.Spec.Steps {
 		step.Template.Name = step.Name
