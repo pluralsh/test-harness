@@ -1,5 +1,4 @@
 #!/bin/bash
 
 sleep 10
-$app = shift
-kubectl wait --for=condition=ready --timeout=30m -n $app applications.app.k8s.io/$app
+kubectl wait --for=condition=ready --timeout=30m -n $1 applications.app.k8s.io/$1
