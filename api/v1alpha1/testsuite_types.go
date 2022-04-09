@@ -69,6 +69,9 @@ type TestSuiteStatus struct {
 
 	// the name of the associated argo workflow
 	WorkflowName string `json:"workflowName"`
+
+	// time when the suite was completed
+	CompletionTime *metav1.Time `json:"completionTime,omitempty"`
 }
 
 //+kubebuilder:object:root=true

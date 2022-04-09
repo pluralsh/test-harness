@@ -3,7 +3,24 @@ package controllers
 import (
 	testv1alpha1 "github.com/pluralsh/test-harness/api/v1alpha1"
 	"github.com/pluralsh/test-harness/pkg/plural"
+	"time"
 )
+
+func suiteCompleted(suite *testv1alpha1.TestSuite) bool {
+	if suite.Status.CompletionTime != nil {
+		return true
+	}
+
+	return suite.Status.Status == plural.StatusSucceeded || suite.Status.Status == plural.StatusFailed
+}
+
+func suiteExpired(suite *testv1alpha1.TestSuite) bool {
+	if suite.Status.CompletionTime == nil {
+		return true
+	}
+
+	return suite.Status.CompletionTime.Time.Add(suiteExpiry).Before(time.Now())
+}
 
 func suiteToPluralTest(suite *testv1alpha1.TestSuite) (test plural.Test) {
 	test.Id = suite.Status.PluralId

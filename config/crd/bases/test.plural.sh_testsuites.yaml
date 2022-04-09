@@ -14720,6 +14720,10 @@ spec:
           status:
             description: TestSuiteStatus defines the observed state of TestSuite
             properties:
+              completionTime:
+                description: time when the suite was completed
+                format: date-time
+                type: string
               pluralId:
                 description: the id for this test suite
                 type: string

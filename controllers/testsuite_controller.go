@@ -19,6 +19,7 @@ package controllers
 import (
 	"context"
 	"fmt"
+	"time"
 
 	"github.com/go-logr/logr"
 	"github.com/pluralsh/test-harness/pkg/plural"
@@ -33,6 +34,7 @@ import (
 	testv1alpha1 "github.com/pluralsh/test-harness/api/v1alpha1"
 	corev1 "k8s.io/api/core/v1"
 	rbacv1 "k8s.io/api/rbac/v1"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 // TestSuiteReconciler reconciles a TestSuite object
@@ -47,6 +49,7 @@ const (
 	ownedAnnotation    = "test.plural.sh/owned-by"
 	entrypointName     = "plrl-entrypoint"
 	serviceAccountName = "argo-executor"
+	suiteExpiry        = time.Hour * 24
 )
 
 //+kubebuilder:rbac:groups=test.plural.sh,resources=testsuites,verbs=get;list;watch;create;update;patch;delete
@@ -69,6 +72,7 @@ func (r *TestSuiteReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 
 	if suite.Status.WorkflowName == "" {
 		// suite hasn't been set up yet so set it up
+		log.Info("Creating new argo workflow for testsuite")
 		wf := suiteToWorkflow(&suite)
 		if err := controllerutil.SetControllerReference(&suite, &wf, r.Scheme); err != nil {
 			return ctrl.Result{}, err
@@ -110,12 +114,23 @@ func (r *TestSuiteReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 		return ctrl.Result{}, nil
 	}
 
+	if suiteCompleted(&suite) && suiteExpired(&suite) {
+		if err := r.Delete(ctx, &suite); err != nil {
+			log.Error(err, "failed to delete testsuite")
+			return ctrl.Result{}, err
+		}
+
+		log.Info("cleaning up expired testsuite")
+		return ctrl.Result{}, nil
+	}
+
 	var wf argov1alpha1.Workflow
 	if err := r.Get(ctx, types.NamespacedName{Namespace: suite.Namespace, Name: suite.Status.WorkflowName}, &wf); err != nil {
 		log.Error(err, "could not find associated workflow")
 		return ctrl.Result{}, client.IgnoreNotFound(err)
 	}
 
+	log.Info("Syncing workflow status to plural")
 	syncWorkflowStatus(&wf, &suite)
 	plrl := suiteToPluralTest(&suite)
 	if _, err := r.Plural.UpdateTest(&plrl); err != nil {
@@ -126,6 +141,12 @@ func (r *TestSuiteReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 	if err := r.Status().Update(ctx, &suite); err != nil {
 		log.Error(err, "failed to update suite status")
 		return ctrl.Result{}, err
+	}
+
+	if suiteCompleted(&suite) && suite.Status.CompletionTime != nil {
+		expiry := suite.Status.CompletionTime.Time.Add(suiteExpiry)
+		log.Info("Scheduling testsuite for expiration")
+		return ctrl.Result{RequeueAfter: time.Until(expiry)}, nil
 	}
 
 	return ctrl.Result{}, nil
@@ -165,6 +186,11 @@ func syncWorkflowStatus(wf *argov1alpha1.Workflow, suite *testv1alpha1.TestSuite
 		if status, ok := statuses[nodeStatus.TemplateName]; ok {
 			status.Status = toPluralStatus(string(nodeStatus.Phase))
 		}
+	}
+
+	if suite.Status.Status == plural.StatusFailed || suite.Status.Status == plural.StatusSucceeded {
+		t := metav1.Now()
+		suite.Status.CompletionTime = &t
 	}
 }
 
