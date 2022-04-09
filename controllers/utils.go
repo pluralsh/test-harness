@@ -7,6 +7,7 @@ import (
 
 func suiteToPluralTest(suite *testv1alpha1.TestSuite) (test plural.Test) {
 	test.Id = suite.Status.PluralId
+	test.Name = suite.Name
 	test.Status = suite.Status.Status
 	test.PromoteTag = suite.Spec.PromoteTag
 	test.Steps = make([]*plural.TestStep, 0)

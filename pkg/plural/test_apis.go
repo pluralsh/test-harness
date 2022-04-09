@@ -24,6 +24,7 @@ type TestStep struct {
 type Test struct {
 	Id         string `json:"id,omitempty"`
 	Status     Status
+	Name       string
 	PromoteTag string
 	Steps      []*TestStep
 }
@@ -31,6 +32,7 @@ type Test struct {
 const TestFragment = `
 	fragment TestFragment on Test {
 		id
+		name
 		status
 		promoteTag
 		steps {
