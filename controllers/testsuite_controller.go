@@ -51,7 +51,9 @@ const (
 
 //+kubebuilder:rbac:groups=test.plural.sh,resources=testsuites,verbs=get;list;watch;create;update;patch;delete
 //+kubebuilder:rbac:groups=argoproj.io,resources=workflows,verbs=get;list;watch;create;update;patch;delete
+//+kubebuilder:rbac:groups=argoproj.io,resources=workflowtaskresults,verbs=get;list;watch;create;update;patch;delete
 //+kubebuilder:rbac:groups=core,resources=serviceaccounts,verbs=get;list;watch;create;update;patch;delete
+//+kubebuilder:rbac:groups=core,resources=pods,verbs=get;list;watch;create;update;patch;delete
 //+kubebuilder:rbac:groups=rbac.authorization.k8s.io,resources=clusterrolebindings,verbs=get;create;list;watch
 //+kubebuilder:rbac:groups=test.plural.sh,resources=testsuites/status,verbs=get;update;patch
 //+kubebuilder:rbac:groups=test.plural.sh,resources=testsuites/finalizers,verbs=update
@@ -68,6 +70,18 @@ func (r *TestSuiteReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 	if suite.Status.WorkflowName == "" {
 		// suite hasn't been set up yet so set it up
 		wf := suiteToWorkflow(&suite)
+		if err := controllerutil.SetControllerReference(&suite, &wf, r.Scheme); err != nil {
+			return ctrl.Result{}, err
+		}
+
+		if err := r.createServiceAccount(ctx, wf.Namespace, serviceAccountName); err != nil {
+			return ctrl.Result{}, err
+		}
+
+		if err := r.addMinimalRole(ctx, wf.Namespace, serviceAccountName); err != nil {
+			return ctrl.Result{}, err
+		}
+
 		plrl := suiteToPluralTest(&suite)
 		tst, err := r.Plural.CreateTest(suite.Spec.Repository, &plrl)
 		if err != nil {
@@ -81,18 +95,6 @@ func (r *TestSuiteReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 			if status, ok := statuses[step.Name]; ok {
 				status.PluralId = step.Id
 			}
-		}
-
-		if err := controllerutil.SetControllerReference(&suite, &wf, r.Scheme); err != nil {
-			return ctrl.Result{}, err
-		}
-
-		if err := r.createServiceAccount(ctx, wf.Namespace, serviceAccountName); err != nil {
-			return ctrl.Result{}, err
-		}
-
-		if err := r.addMinimalRole(ctx, wf.Namespace, serviceAccountName); err != nil {
-			return ctrl.Result{}, err
 		}
 
 		if err := r.Create(ctx, &wf); err != nil {
