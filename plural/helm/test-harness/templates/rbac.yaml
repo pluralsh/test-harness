@@ -48,6 +48,7 @@ rules:
   resources:
   - serviceaccounts
   - pods
+  - pods/log
   verbs:
   - get
   - create

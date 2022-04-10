@@ -42,6 +42,7 @@ func (w *LogWatcher) Tail(ctx context.Context) error {
 		}
 		podLogs, err := clientset.CoreV1().Pods(w.Pod.Namespace).GetLogs(w.Pod.Name, podLogOpts).Stream(ctx)
 		if err != nil {
+			fmt.Println("Failed to tail pod logs", err)
 			return err
 		}
 		defer podLogs.Close()
