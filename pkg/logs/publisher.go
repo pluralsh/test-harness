@@ -15,8 +15,8 @@ type LogPublisher struct {
 }
 
 type LogMessage struct {
-	Line string
-	Id   string
+	Line string `json:"line"`
+	Id   string `json:"step"`
 }
 
 func NewPublisher(socket *plural.Socket, test *testv1alpha1.TestSuite) *LogPublisher {
@@ -68,5 +68,4 @@ func (pub *LogPublisher) OnJoinError(payload interface{}) {}
 func (pub *LogPublisher) OnChannelClose(payload interface{}) {
 	pub.Open = false
 }
-func (pub *LogPublisher) OnMessage(event string, payload interface{})                             {}
-func (pub *LogPublisher) OnMessageToReply(message interface{}, event string, payload interface{}) {}
+func (pub *LogPublisher) OnMessage(ref int64, event string, payload interface{}) {}

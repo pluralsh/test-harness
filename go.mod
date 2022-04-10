@@ -3,7 +3,7 @@ module github.com/pluralsh/test-harness
 go 1.16
 
 require (
-	github.com/Douvi/gophoenix v0.0.63
+	github.com/Douvi/gophoenix v0.0.53-0.20210415050613-547636b5860b
 	github.com/argoproj/argo-workflows/v3 v3.3.1
 	github.com/go-logr/logr v1.2.2
 	github.com/michaeljguarino/graphql v0.2.5

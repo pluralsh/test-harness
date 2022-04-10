@@ -34,7 +34,7 @@ func WebSocket(config *Config) (socket Socket) {
 
 func (socket *Socket) Connect() error {
 	conf := socket.Config
-	url, err := url.Parse(fmt.Sprintf("wss://%s/socket/websocket?token=%s", conf.PluralEndpoint(), conf.Token))
+	url, err := url.Parse(fmt.Sprintf("wss://%s/socket/websocket?token=%s&vsn=2.0.0", conf.PluralEndpoint(), conf.Token))
 	if err != nil {
 		return err
 	}
