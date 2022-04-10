@@ -18,7 +18,6 @@ type TestStep struct {
 	Name        string
 	Description string
 	Status      Status
-	Logs        string
 }
 
 type Test struct {
