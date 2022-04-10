@@ -24,6 +24,7 @@ func NewPublisher(socket *plural.Socket, test *testv1alpha1.TestSuite) *LogPubli
 }
 
 func (pub *LogPublisher) Publish(line string, step *testv1alpha1.StepStatus) error {
+	fmt.Printf("Publishing %s\n", line)
 	if err := pub.ensureConnected(); err != nil {
 		return err
 	}
@@ -33,6 +34,11 @@ func (pub *LogPublisher) Publish(line string, step *testv1alpha1.StepStatus) err
 }
 
 func (pub *LogPublisher) Close() error {
+	if !pub.Open {
+		fmt.Println("no need to close publisher")
+		return nil
+	}
+
 	return pub.Channel.Leave(map[string]string{})
 }
 
