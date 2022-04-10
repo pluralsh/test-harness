@@ -3,6 +3,7 @@ package logs
 import (
 	"bufio"
 	"context"
+	"fmt"
 	testv1alpha1 "github.com/pluralsh/test-harness/api/v1alpha1"
 	"github.com/pluralsh/test-harness/pkg/utils"
 	corev1 "k8s.io/api/core/v1"
@@ -52,7 +53,9 @@ func (w *LogWatcher) Tail(ctx context.Context) error {
 				case <-ctx.Done():
 					return
 				default:
-					w.Publisher.Publish(reader.Text(), w.Step)
+					if err := w.Publisher.Publish(reader.Text(), w.Step); err != nil {
+						fmt.Println("failed to publish line", err)
+					}
 				}
 			}
 		})
