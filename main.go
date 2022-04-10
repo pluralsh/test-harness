@@ -35,6 +35,7 @@ import (
 	argov1alpha1 "github.com/argoproj/argo-workflows/v3/pkg/apis/workflow/v1alpha1"
 	testv1alpha1 "github.com/pluralsh/test-harness/api/v1alpha1"
 	"github.com/pluralsh/test-harness/controllers"
+	"github.com/pluralsh/test-harness/pkg/logs"
 	"github.com/pluralsh/test-harness/pkg/plural"
 	//+kubebuilder:scaffold:imports
 )
@@ -84,12 +85,14 @@ func main() {
 	}
 
 	plrl := plural.NewConfig()
+	socket := plural.WebSocket(plrl)
 
 	if err = (&controllers.TestSuiteReconciler{
-		Client: mgr.GetClient(),
-		Scheme: mgr.GetScheme(),
-		Plural: plural.NewClient(plrl),
-		Log:    ctrl.Log.WithName("controllers").WithName("TestSuite"),
+		Client:     mgr.GetClient(),
+		Scheme:     mgr.GetScheme(),
+		Plural:     plural.NewClient(plrl),
+		LogManager: logs.NewManager(&socket),
+		Log:        ctrl.Log.WithName("controllers").WithName("TestSuite"),
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "TestSuite")
 		os.Exit(1)

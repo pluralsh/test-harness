@@ -32,6 +32,7 @@ import (
 
 	argov1alpha1 "github.com/argoproj/argo-workflows/v3/pkg/apis/workflow/v1alpha1"
 	testv1alpha1 "github.com/pluralsh/test-harness/api/v1alpha1"
+	"github.com/pluralsh/test-harness/pkg/logs"
 	corev1 "k8s.io/api/core/v1"
 	rbacv1 "k8s.io/api/rbac/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -40,9 +41,10 @@ import (
 // TestSuiteReconciler reconciles a TestSuite object
 type TestSuiteReconciler struct {
 	client.Client
-	Log    logr.Logger
-	Scheme *runtime.Scheme
-	Plural *plural.Client
+	Log        logr.Logger
+	Scheme     *runtime.Scheme
+	Plural     *plural.Client
+	LogManager *logs.LogManager
 }
 
 const (
@@ -132,6 +134,11 @@ func (r *TestSuiteReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 
 	log.Info("Syncing workflow status to plural")
 	syncWorkflowStatus(&wf, &suite)
+
+	if err := r.ensureLogsTailed(ctx, &wf, &suite); err != nil {
+		log.Error(err, "failed to tail logs (this is a noncritical error)")
+	}
+
 	plrl := suiteToPluralTest(&suite)
 	if _, err := r.Plural.UpdateTest(&plrl); err != nil {
 		log.Error(err, "failed to update plural test")
@@ -146,10 +153,34 @@ func (r *TestSuiteReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 	if suiteCompleted(&suite) && suite.Status.CompletionTime != nil {
 		expiry := suite.Status.CompletionTime.Time.Add(suiteExpiry)
 		log.Info("Scheduling testsuite for expiration")
+		if err := r.LogManager.Cancel(&suite); err != nil {
+			log.Error(err, "failed to cancel log watchers (this is not a critical error)")
+		}
+
 		return ctrl.Result{RequeueAfter: time.Until(expiry)}, nil
 	}
 
 	return ctrl.Result{}, nil
+}
+
+func (r *TestSuiteReconciler) ensureLogsTailed(ctx context.Context, wf *argov1alpha1.Workflow, suite *testv1alpha1.TestSuite) error {
+	statuses := stepStatuses(suite)
+	for _, nodeStatus := range wf.Status.Nodes {
+		if status, ok := statuses[nodeStatus.TemplateName]; ok && toPluralStatus(string(nodeStatus.Phase)) == plural.StatusRunning {
+			var pod corev1.Pod
+			if err := r.Get(ctx, types.NamespacedName{Namespace: suite.Namespace, Name: nodeStatus.ID}, &pod); err != nil {
+				return err
+			}
+
+			mgr, err, _ := r.LogManager.SuiteManager(suite)
+			if err != nil {
+				return err
+			}
+			mgr.AddWatcher(&pod, status)
+		}
+	}
+
+	return nil
 }
 
 func (r *TestSuiteReconciler) createServiceAccount(ctx context.Context, namespace, sa string) error {

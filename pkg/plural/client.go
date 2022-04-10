@@ -2,6 +2,7 @@ package plural
 
 import (
 	"context"
+	"fmt"
 	"github.com/michaeljguarino/graphql"
 	"os"
 )
@@ -29,11 +30,15 @@ func NewClient(conf *Config) *Client {
 }
 
 func (c *Config) BaseUrl() string {
-	host := "https://app.plural.sh"
-	if c.Endpoint != "" {
-		host = "https://" + c.Endpoint
+	return fmt.Sprintf("https://%s", c.PluralEndpoint())
+}
+
+func (c *Config) PluralEndpoint() string {
+	if c.Endpoint == "" {
+		return "app.plural.sh"
 	}
-	return host
+
+	return c.Endpoint
 }
 
 func (client *Client) Build(doc string) *graphql.Request {
