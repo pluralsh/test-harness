@@ -166,7 +166,7 @@ func (r *TestSuiteReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 func (r *TestSuiteReconciler) ensureLogsTailed(ctx context.Context, wf *argov1alpha1.Workflow, suite *testv1alpha1.TestSuite) error {
 	statuses := stepStatuses(suite)
 	for _, nodeStatus := range wf.Status.Nodes {
-		if status, ok := statuses[nodeStatus.TemplateName]; ok && toPluralStatus(string(nodeStatus.Phase)) == plural.StatusRunning {
+		if status, ok := statuses[nodeStatus.TemplateName]; ok {
 			var pod corev1.Pod
 			if err := r.Get(ctx, types.NamespacedName{Namespace: suite.Namespace, Name: nodeStatus.ID}, &pod); err != nil {
 				return err
