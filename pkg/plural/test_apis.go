@@ -2,6 +2,7 @@ package plural
 
 import (
 	"fmt"
+	"os"
 )
 
 type Status string
@@ -62,6 +63,12 @@ var updateTest = fmt.Sprintf(`
 	%s
 `, TestFragment)
 
+var updateStep = `
+	mutation Update($id: ID!, $logs: UploadOrUrl!) {
+		updateStep(id: $id, attributes: {logs: $logs}) { id }
+	}
+`
+
 func (client *Client) CreateTest(repo string, test *Test) (result *Test, err error) {
 	var resp struct {
 		CreateTest *Test
@@ -85,4 +92,23 @@ func (client *Client) UpdateTest(test *Test) (result *Test, err error) {
 	err = client.Run(req, &resp)
 	result = resp.UpdateTest
 	return
+}
+
+func (client *Client) UpdateStep(id string, logFile string) error {
+	var resp struct {
+		UpdateTest struct {
+			Id string
+		}
+	}
+	f, err := os.Open(logFile)
+	if err != nil {
+		return err
+	}
+	defer f.Close()
+
+	req := client.Build(updateTest)
+	req.Var("id", id)
+	req.Var("logs", "logs")
+	req.File("logs", logFile, f)
+	return client.Run(req, &resp)
 }

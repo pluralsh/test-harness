@@ -18,11 +18,12 @@ type SuiteManager struct {
 
 type LogManager struct {
 	Socket *plural.Socket
+	Client *plural.Client
 	Suites map[string]*SuiteManager
 }
 
-func NewManager(socket *plural.Socket) *LogManager {
-	return &LogManager{Socket: socket, Suites: make(map[string]*SuiteManager)}
+func NewManager(socket *plural.Socket, client *plural.Client) *LogManager {
+	return &LogManager{Socket: socket, Client: client, Suites: make(map[string]*SuiteManager)}
 }
 
 func (mgr *LogManager) SuiteManager(test *testv1alpha1.TestSuite) (smgr *SuiteManager, err error, found bool) {
@@ -35,7 +36,7 @@ func (mgr *LogManager) SuiteManager(test *testv1alpha1.TestSuite) (smgr *SuiteMa
 
 	smgr = &SuiteManager{Test: test, Pods: make(map[string]*LogWatcher)}
 	smgr.Ctx, smgr.Cancel = context.WithCancel(context.Background())
-	smgr.Publisher = NewPublisher(mgr.Socket, test)
+	smgr.Publisher = NewPublisher(mgr, test)
 	smgr.Test = test
 	mgr.Suites[name] = smgr
 	return

@@ -6,8 +6,10 @@ import (
 	"fmt"
 	testv1alpha1 "github.com/pluralsh/test-harness/api/v1alpha1"
 	"github.com/pluralsh/test-harness/pkg/utils"
+	"io/ioutil"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/client-go/kubernetes"
+	"os"
 	"sync"
 )
 
@@ -32,6 +34,13 @@ func (w *LogWatcher) Tail(ctx context.Context) error {
 		return err
 	}
 
+	f, err := ioutil.TempFile("", w.Pod.Name)
+	if err != nil {
+		return err
+	}
+	defer w.uploadFile(f)
+	defer os.Remove(f.Name())
+
 	wg := &sync.WaitGroup{}
 	functionList := []func(){}
 	for _, container := range w.Pod.Spec.Containers {
@@ -54,7 +63,9 @@ func (w *LogWatcher) Tail(ctx context.Context) error {
 				case <-ctx.Done():
 					return
 				default:
-					if err := w.Publisher.Publish(reader.Text(), w.Step); err != nil {
+					line := reader.Text()
+					f.WriteString(line + "\n")
+					if err := w.Publisher.Publish(line, w.Step); err != nil {
 						fmt.Println("failed to publish line", err)
 					}
 				}
@@ -67,5 +78,15 @@ func (w *LogWatcher) Tail(ctx context.Context) error {
 		go f()
 	}
 	wg.Wait()
+	return nil
+}
+
+func (w *LogWatcher) uploadFile(f *os.File) error {
+	stepId := w.Step.PluralId
+	if err := w.Publisher.Client.UpdateStep(stepId, f.Name()); err != nil {
+		fmt.Println("failed to upload logs", err)
+		return err
+	}
+
 	return nil
 }

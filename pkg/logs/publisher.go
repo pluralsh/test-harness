@@ -9,6 +9,7 @@ import (
 
 type LogPublisher struct {
 	Socket  *plural.Socket
+	Client  *plural.Client
 	Test    *testv1alpha1.TestSuite
 	Channel *phx.Channel
 	Open    bool
@@ -19,8 +20,8 @@ type LogMessage struct {
 	Id   string `json:"step"`
 }
 
-func NewPublisher(socket *plural.Socket, test *testv1alpha1.TestSuite) *LogPublisher {
-	return &LogPublisher{Socket: socket, Test: test}
+func NewPublisher(mgr *LogManager, test *testv1alpha1.TestSuite) *LogPublisher {
+	return &LogPublisher{Socket: mgr.Socket, Client: mgr.Client, Test: test}
 }
 
 func (pub *LogPublisher) Publish(line string, step *testv1alpha1.StepStatus) error {
