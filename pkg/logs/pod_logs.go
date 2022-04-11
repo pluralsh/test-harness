@@ -38,7 +38,6 @@ func (w *LogWatcher) Tail(ctx context.Context) error {
 	if err != nil {
 		return err
 	}
-	defer w.uploadFile(f)
 	defer os.Remove(f.Name())
 
 	wg := &sync.WaitGroup{}
@@ -78,7 +77,8 @@ func (w *LogWatcher) Tail(ctx context.Context) error {
 		go f()
 	}
 	wg.Wait()
-	return nil
+
+	return w.uploadFile(f)
 }
 
 func (w *LogWatcher) uploadFile(f *os.File) error {
