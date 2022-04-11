@@ -21,7 +21,7 @@ type LogMessage struct {
 }
 
 func NewPublisher(mgr *LogManager, test *testv1alpha1.TestSuite) *LogPublisher {
-	return &LogPublisher{Socket: mgr.Socket, Client: mgr.Client, Test: test}
+	return &LogPublisher{Socket: mgr.Socket, Client: plural.NewUploadClient(mgr.Config), Test: test}
 }
 
 func (pub *LogPublisher) Publish(line string, step *testv1alpha1.StepStatus) error {

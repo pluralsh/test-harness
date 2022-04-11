@@ -18,12 +18,12 @@ type SuiteManager struct {
 
 type LogManager struct {
 	Socket *plural.Socket
-	Client *plural.Client
+	Config *plural.Config
 	Suites map[string]*SuiteManager
 }
 
-func NewManager(socket *plural.Socket, client *plural.Client) *LogManager {
-	return &LogManager{Socket: socket, Client: client, Suites: make(map[string]*SuiteManager)}
+func NewManager(socket *plural.Socket, config *plural.Config) *LogManager {
+	return &LogManager{Socket: socket, Config: config, Suites: make(map[string]*SuiteManager)}
 }
 
 func (mgr *LogManager) SuiteManager(test *testv1alpha1.TestSuite) (smgr *SuiteManager, err error, found bool) {

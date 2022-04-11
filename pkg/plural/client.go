@@ -29,6 +29,11 @@ func NewClient(conf *Config) *Client {
 	return &Client{graphql.NewClient(base + "/gql"), conf}
 }
 
+func NewUploadClient(conf *Config) *Client {
+	client := graphql.NewClient(conf.BaseUrl()+"/gql", graphql.UseMultipartForm())
+	return &Client{client, conf}
+}
+
 func (c *Config) BaseUrl() string {
 	return fmt.Sprintf("https://%s", c.PluralEndpoint())
 }
