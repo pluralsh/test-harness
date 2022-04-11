@@ -105,7 +105,7 @@ func (client *Client) UpdateStep(id string, logFile string) error {
 	}
 	defer f.Close()
 
-	req := client.Build(updateTest)
+	req := client.Build(updateStep)
 	req.Var("id", id)
 	req.Var("logs", "logs")
 	req.File("logs", logFile, f)
