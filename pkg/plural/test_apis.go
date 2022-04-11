@@ -40,7 +40,6 @@ const TestFragment = `
 			name
 			description
 			status
-			logs
 		}
 	}
 `
