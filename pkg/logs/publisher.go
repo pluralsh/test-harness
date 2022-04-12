@@ -10,6 +10,7 @@ import (
 )
 
 type LogPublisher struct {
+	mu      sync.Mutex
 	Client  *plural.Client
 	Test    *testv1alpha1.TestSuite
 	Channel *phx.Channel
@@ -35,6 +36,8 @@ func NewPublisher(mgr *LogManager, test *testv1alpha1.TestSuite) *LogPublisher {
 
 func (pub *LogPublisher) Publish(line string, step *testv1alpha1.StepStatus) error {
 	fmt.Printf("Publishing %s\n", line)
+	pub.mu.Lock()
+	defer pub.mu.Unlock()
 	id := step.PluralId
 	buf, ok := pub.Buffer[id]
 	if !ok {
