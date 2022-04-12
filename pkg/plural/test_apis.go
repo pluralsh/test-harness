@@ -68,6 +68,12 @@ var updateStep = `
 	}
 `
 
+var publishLogs = `
+	mutation Publish($id: ID!, $logs: String!) {
+		publishLogs(id: $id, logs: $logs) { id }
+	}
+`
+
 func (client *Client) CreateTest(repo string, test *Test) (result *Test, err error) {
 	var resp struct {
 		CreateTest *Test
@@ -91,6 +97,18 @@ func (client *Client) UpdateTest(test *Test) (result *Test, err error) {
 	err = client.Run(req, &resp)
 	result = resp.UpdateTest
 	return
+}
+
+func (client *Client) PublishLogs(stepId, logs string) error {
+	var resp struct {
+		PublishLogs struct {
+			Id string
+		}
+	}
+	req := client.Build(publishLogs)
+	req.Var("id", stepId)
+	req.Var("logs", logs)
+	return client.Run(req, &resp)
 }
 
 func (client *Client) UpdateStep(id string, logFile string) error {

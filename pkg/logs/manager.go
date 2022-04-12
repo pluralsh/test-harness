@@ -17,15 +17,12 @@ type SuiteManager struct {
 }
 
 type LogManager struct {
-	Socket *plural.Socket
 	Config *plural.Config
 	Suites map[string]*SuiteManager
 }
 
 func NewManager(config *plural.Config) *LogManager {
-	socket := plural.WebSocket(config)
 	return &LogManager{
-		Socket: &socket,
 		Config: config,
 		Suites: make(map[string]*SuiteManager),
 	}
