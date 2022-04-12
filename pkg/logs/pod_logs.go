@@ -6,11 +6,14 @@ import (
 	"fmt"
 	testv1alpha1 "github.com/pluralsh/test-harness/api/v1alpha1"
 	"github.com/pluralsh/test-harness/pkg/utils"
+	"github.com/sethvargo/go-retry"
+	"io"
 	"io/ioutil"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/client-go/kubernetes"
 	"os"
 	"sync"
+	"time"
 )
 
 type LogWatcher struct {
@@ -48,12 +51,24 @@ func (w *LogWatcher) Tail(ctx context.Context) error {
 			SinceSeconds: utils.Int64(sinceSeconds),
 			Container:    container.Name,
 		}
-		podLogs, err := clientset.CoreV1().Pods(w.Pod.Namespace).GetLogs(w.Pod.Name, podLogOpts).Stream(ctx)
-		if err != nil {
-			fmt.Println("Failed to tail pod logs", err)
+
+		var podLogs io.ReadCloser
+		backoff := retry.NewExponential(1 * time.Second)
+		backoff = retry.WithMaxRetries(10, backoff)
+		backoff = retry.WithJitterPercent(5, backoff)
+		if err := retry.Do(ctx, backoff, func(ctx context.Context) error {
+			logs, err := clientset.CoreV1().Pods(w.Pod.Namespace).GetLogs(w.Pod.Name, podLogOpts).Stream(ctx)
+			if err != nil {
+				fmt.Println("Failed to tail pod logs", err)
+				return retry.RetryableError(err)
+			}
+			podLogs = logs
+			return nil
+		}); err != nil {
 			return err
 		}
 		defer podLogs.Close()
+
 		functionList = append(functionList, func() {
 			defer wg.Done()
 			reader := bufio.NewScanner(podLogs)
@@ -72,12 +87,13 @@ func (w *LogWatcher) Tail(ctx context.Context) error {
 		})
 	}
 
+	w.Publisher.Wait.Add(1)
+	defer w.Publisher.Wait.Done()
 	wg.Add(len(functionList))
 	for _, f := range functionList {
 		go f()
 	}
 	wg.Wait()
-
 	return w.uploadFile(f)
 }
 

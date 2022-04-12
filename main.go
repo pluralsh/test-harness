@@ -85,13 +85,11 @@ func main() {
 	}
 
 	plrl := plural.NewConfig()
-	socket := plural.WebSocket(plrl)
-
 	if err = (&controllers.TestSuiteReconciler{
 		Client:     mgr.GetClient(),
 		Scheme:     mgr.GetScheme(),
 		Plural:     plural.NewClient(plrl),
-		LogManager: logs.NewManager(&socket, plrl),
+		LogManager: logs.NewManager(plrl),
 		Log:        ctrl.Log.WithName("controllers").WithName("TestSuite"),
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "TestSuite")

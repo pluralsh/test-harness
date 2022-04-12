@@ -5,6 +5,7 @@ import (
 	phx "github.com/Douvi/gophoenix"
 	testv1alpha1 "github.com/pluralsh/test-harness/api/v1alpha1"
 	"github.com/pluralsh/test-harness/pkg/plural"
+	"sync"
 )
 
 type LogPublisher struct {
@@ -12,6 +13,7 @@ type LogPublisher struct {
 	Client  *plural.Client
 	Test    *testv1alpha1.TestSuite
 	Channel *phx.Channel
+	Wait    *sync.WaitGroup
 	Open    bool
 }
 
@@ -21,7 +23,12 @@ type LogMessage struct {
 }
 
 func NewPublisher(mgr *LogManager, test *testv1alpha1.TestSuite) *LogPublisher {
-	return &LogPublisher{Socket: mgr.Socket, Client: plural.NewUploadClient(mgr.Config), Test: test}
+	return &LogPublisher{
+		Socket: mgr.Socket,
+		Client: plural.NewUploadClient(mgr.Config),
+		Test:   test,
+		Wait:   &sync.WaitGroup{},
+	}
 }
 
 func (pub *LogPublisher) Publish(line string, step *testv1alpha1.StepStatus) error {

@@ -22,8 +22,13 @@ type LogManager struct {
 	Suites map[string]*SuiteManager
 }
 
-func NewManager(socket *plural.Socket, config *plural.Config) *LogManager {
-	return &LogManager{Socket: socket, Config: config, Suites: make(map[string]*SuiteManager)}
+func NewManager(config *plural.Config) *LogManager {
+	socket := plural.WebSocket(config)
+	return &LogManager{
+		Socket: &socket,
+		Config: config,
+		Suites: make(map[string]*SuiteManager),
+	}
 }
 
 func (mgr *LogManager) SuiteManager(test *testv1alpha1.TestSuite) (smgr *SuiteManager, err error, found bool) {
@@ -51,6 +56,7 @@ func (mgr *LogManager) Cancel(test *testv1alpha1.TestSuite) error {
 
 	smgr.Cancel()
 	delete(mgr.Suites, name)
+	smgr.Publisher.Wait.Wait()
 	return smgr.Publisher.Close()
 }
 

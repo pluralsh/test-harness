@@ -137,7 +137,7 @@ func (r *TestSuiteReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 	syncWorkflowStatus(&wf, &suite)
 
 	if err := r.ensureLogsTailed(ctx, &wf, &suite); err != nil {
-		log.Error(err, "failed to tail logs (this is a noncritical error)")
+		log.Error(err, "failed tailing logs (this is a noncritical error)")
 	}
 
 	plrl := suiteToPluralTest(&suite)
@@ -165,6 +165,10 @@ func (r *TestSuiteReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 }
 
 func (r *TestSuiteReconciler) ensureLogsTailed(ctx context.Context, wf *argov1alpha1.Workflow, suite *testv1alpha1.TestSuite) error {
+	if suiteCompleted(suite) {
+		return nil
+	}
+
 	statuses := stepStatuses(suite)
 	for _, nodeStatus := range wf.Status.Nodes {
 		if status, ok := statuses[nodeStatus.TemplateName]; ok {
