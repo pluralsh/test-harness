@@ -94,6 +94,7 @@ func (w *LogWatcher) Tail(ctx context.Context) error {
 		go f()
 	}
 	wg.Wait()
+	fmt.Println("uploading logfile to plural")
 	return w.uploadFile(f)
 }
 

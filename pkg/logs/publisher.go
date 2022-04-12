@@ -41,7 +41,7 @@ func (pub *LogPublisher) Publish(line string, step *testv1alpha1.StepStatus) err
 	id := step.PluralId
 	buf, ok := pub.Buffer[id]
 	if !ok {
-		buf = []string{}
+		buf = make([]string, 0, flushLen)
 	}
 	pub.Buffer[id] = append(buf, line)
 
@@ -67,6 +67,7 @@ func (pub *LogPublisher) Close() error {
 func (pub *LogPublisher) deliver(id string) error {
 	buf, _ := pub.Buffer[id]
 	logs := strings.Join(buf, "\n")
-	pub.Buffer[id] = []string{}
+	pub.Buffer[id] = make([]string, 0, flushLen)
+	fmt.Println("publishing log batch for ", id)
 	return pub.Client.PublishLogs(id, logs)
 }
