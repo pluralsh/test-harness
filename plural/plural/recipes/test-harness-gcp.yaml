@@ -4,6 +4,8 @@ provider: GCP
 dependencies:
 - repo: bootstrap
   name: gcp-k8s
+- repo: argo-workflows
+  name: argo-workflows-gcp
 sections:
 - name: test-harness
   configuration: []

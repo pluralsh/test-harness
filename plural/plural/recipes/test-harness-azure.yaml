@@ -4,6 +4,8 @@ provider: AZURE
 dependencies:
 - repo: bootstrap
   name: azure-k8s
+- repo: argo-workflows
+  name: argo-workflows-azure
 sections:
 - name: test-harness
   configuration: []
