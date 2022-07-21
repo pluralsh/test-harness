@@ -3,9 +3,21 @@ package plural
 import (
 	"context"
 	"fmt"
-	"github.com/michaeljguarino/graphql"
+	"net/http"
 	"os"
+
+	"github.com/pluralsh/gqlclient"
 )
+
+type authedTransport struct {
+	key     string
+	wrapped http.RoundTripper
+}
+
+func (t *authedTransport) RoundTrip(req *http.Request) (*http.Response, error) {
+	req.Header.Set("Authorization", "Bearer "+t.key)
+	return t.wrapped.RoundTrip(req)
+}
 
 type Config struct {
 	Token    string
@@ -13,8 +25,9 @@ type Config struct {
 }
 
 type Client struct {
-	gqlClient *graphql.Client
-	config    *Config
+	ctx          context.Context
+	pluralClient *gqlclient.Client
+	config       *Config
 }
 
 func NewConfig() *Config {
@@ -26,12 +39,18 @@ func NewConfig() *Config {
 
 func NewClient(conf *Config) *Client {
 	base := conf.BaseUrl()
-	return &Client{graphql.NewClient(base + "/gql"), conf}
-}
-
-func NewUploadClient(conf *Config) *Client {
-	client := graphql.NewClient(conf.BaseUrl()+"/gql", graphql.UseMultipartForm())
-	return &Client{client, conf}
+	httpClient := http.Client{
+		Transport: &authedTransport{
+			key:     conf.Token,
+			wrapped: http.DefaultTransport,
+		},
+	}
+	endpoint := base + "/gql"
+	return &Client{
+		ctx:          context.Background(),
+		pluralClient: gqlclient.NewClient(&httpClient, endpoint),
+		config:       conf,
+	}
 }
 
 func (c *Config) BaseUrl() string {
@@ -44,14 +63,4 @@ func (c *Config) PluralEndpoint() string {
 	}
 
 	return c.Endpoint
-}
-
-func (client *Client) Build(doc string) *graphql.Request {
-	req := graphql.NewRequest(doc)
-	req.Header.Set("Authorization", "Bearer "+client.config.Token)
-	return req
-}
-
-func (client *Client) Run(req *graphql.Request, resp interface{}) error {
-	return client.gqlClient.Run(context.Background(), req, &resp)
 }

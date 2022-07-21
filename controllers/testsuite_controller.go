@@ -90,7 +90,7 @@ func (r *TestSuiteReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 		}
 
 		plrl := suiteToPluralTest(&suite)
-		tst, err := r.Plural.CreateTest(suite.Spec.Repository, &plrl)
+		tst, err := r.Plural.CreateTest(suite.Spec.Repository, plrl)
 		if err != nil {
 			log.Error(err, "failed to create plural test")
 			return ctrl.Result{}, err
@@ -141,7 +141,7 @@ func (r *TestSuiteReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 	}
 
 	plrl := suiteToPluralTest(&suite)
-	if _, err := r.Plural.UpdateTest(&plrl); err != nil {
+	if _, err := r.Plural.UpdateTest(suite.Status.PluralId, plrl); err != nil {
 		log.Error(err, "failed to update plural test")
 		return ctrl.Result{}, nil
 	}

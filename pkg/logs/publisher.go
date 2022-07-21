@@ -2,11 +2,12 @@ package logs
 
 import (
 	"fmt"
+	"strings"
+	"sync"
+
 	phx "github.com/Douvi/gophoenix"
 	testv1alpha1 "github.com/pluralsh/test-harness/api/v1alpha1"
 	"github.com/pluralsh/test-harness/pkg/plural"
-	"strings"
-	"sync"
 )
 
 type LogPublisher struct {
@@ -27,7 +28,7 @@ const flushLen = 10
 
 func NewPublisher(mgr *LogManager, test *testv1alpha1.TestSuite) *LogPublisher {
 	return &LogPublisher{
-		Client: plural.NewUploadClient(mgr.Config),
+		Client: plural.NewClient(mgr.Config),
 		Test:   test,
 		Buffer: make(map[string][]string),
 		Wait:   &sync.WaitGroup{},

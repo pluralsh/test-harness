@@ -3,6 +3,9 @@ package plural
 import (
 	"fmt"
 	"os"
+
+	"github.com/pluralsh/gqlclient"
+	"github.com/pluralsh/gqlclient/pkg/utils"
 )
 
 type Status string
@@ -29,103 +32,71 @@ type Test struct {
 	Steps      []*TestStep
 }
 
-const TestFragment = `
-	fragment TestFragment on Test {
-		id
-		name
-		status
-		promoteTag
-		steps {
-			id
-			name
-			description
-			status
-		}
+func (client *Client) CreateTest(repo string, test gqlclient.TestAttributes) (*Test, error) {
+	resp, err := client.pluralClient.CreateTest(client.ctx, repo, test)
+	if err != nil {
+		return nil, err
 	}
-`
 
-var createTest = fmt.Sprintf(`
-	mutation Create($name: String!, $attrs: TestAttributes!) {
-		createTest(name: $name, attributes: $attrs) {
-			...TestFragment
-		}
-	}
-	%s
-`, TestFragment)
-
-var updateTest = fmt.Sprintf(`
-	mutation Update($id: ID!, $attrs: TestAttributes!) {
-		updateTest(id: $id, attributes: $attrs) {
-			...TestFragment
-		}
-	}
-	%s
-`, TestFragment)
-
-var updateStep = `
-	mutation Update($id: ID!, $logs: UploadOrUrl!) {
-		updateStep(id: $id, attributes: {logs: $logs}) { id }
-	}
-`
-
-var publishLogs = `
-	mutation Publish($id: ID!, $logs: String!) {
-		publishLogs(id: $id, logs: $logs) { id }
-	}
-`
-
-func (client *Client) CreateTest(repo string, test *Test) (result *Test, err error) {
-	var resp struct {
-		CreateTest *Test
-	}
-	req := client.Build(createTest)
-	req.Var("name", repo)
-	req.Var("attrs", test)
-	err = client.Run(req, &resp)
-	result = resp.CreateTest
-	return
+	return convertTest(resp.CreateTest)
 }
 
-func (client *Client) UpdateTest(test *Test) (result *Test, err error) {
-	var resp struct {
-		UpdateTest *Test
+func (client *Client) UpdateTest(id string, test gqlclient.TestAttributes) (*Test, error) {
+	resp, err := client.pluralClient.UpdateTest(client.ctx, id, test)
+	if err != nil {
+		return nil, err
 	}
-	req := client.Build(updateTest)
-	req.Var("id", test.Id)
-	test.Id = "" // hack to bypass serialization
-	req.Var("attrs", test)
-	err = client.Run(req, &resp)
-	result = resp.UpdateTest
-	return
+
+	return convertTest(resp.UpdateTest)
 }
 
 func (client *Client) PublishLogs(stepId, logs string) error {
-	var resp struct {
-		PublishLogs struct {
-			Id string
-		}
+	_, err := client.pluralClient.PublishLogs(client.ctx, stepId, logs)
+	if err != nil {
+		return err
 	}
-	req := client.Build(publishLogs)
-	req.Var("id", stepId)
-	req.Var("logs", logs)
-	return client.Run(req, &resp)
+	return nil
 }
 
 func (client *Client) UpdateStep(id string, logFile string) error {
-	var resp struct {
-		UpdateTest struct {
-			Id string
-		}
-	}
 	f, err := os.Open(logFile)
 	if err != nil {
 		return err
 	}
 	defer f.Close()
 
-	req := client.Build(updateStep)
-	req.Var("id", id)
-	req.Var("logs", "logs")
-	req.File("logs", logFile, f)
-	return client.Run(req, &resp)
+	_, err = client.pluralClient.UpdateStep(client.ctx, id, "logs", gqlclient.WithFiles([]gqlclient.Upload{
+		{
+			Field: "logs",
+			Name:  logFile,
+			R:     f,
+		},
+	}))
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func convertTest(testFragment *gqlclient.TestFragment) (*Test, error) {
+	if testFragment == nil {
+		return nil, fmt.Errorf("the Test response is nil")
+	}
+	t := &Test{
+		Id:         testFragment.ID,
+		Status:     Status(testFragment.Status),
+		Name:       utils.ConvertStringPointer(testFragment.Name),
+		PromoteTag: testFragment.PromoteTag,
+		Steps:      []*TestStep{},
+	}
+	for _, step := range testFragment.Steps {
+		s := &TestStep{
+			Id:          step.ID,
+			Name:        step.Name,
+			Description: step.Description,
+			Status:      Status(step.Status),
+		}
+		t.Steps = append(t.Steps, s)
+	}
+	return t, nil
 }
