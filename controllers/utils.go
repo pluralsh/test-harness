@@ -1,9 +1,11 @@
 package controllers
 
 import (
+	"time"
+
+	"github.com/pluralsh/gqlclient"
 	testv1alpha1 "github.com/pluralsh/test-harness/api/v1alpha1"
 	"github.com/pluralsh/test-harness/pkg/plural"
-	"time"
 )
 
 func suiteCompleted(suite *testv1alpha1.TestSuite) bool {
@@ -22,12 +24,12 @@ func suiteExpired(suite *testv1alpha1.TestSuite) bool {
 	return suite.Status.CompletionTime.Time.Add(suiteExpiry).Before(time.Now())
 }
 
-func suiteToPluralTest(suite *testv1alpha1.TestSuite) (test plural.Test) {
-	test.Id = suite.Status.PluralId
-	test.Name = suite.Name
-	test.Status = suite.Status.Status
-	test.PromoteTag = suite.Spec.PromoteTag
-	test.Steps = make([]*plural.TestStep, 0)
+func suiteToPluralTest(suite *testv1alpha1.TestSuite) (test gqlclient.TestAttributes) {
+	status := gqlclient.TestStatus(suite.Status.Status)
+	test.Name = &suite.Name
+	test.Status = &status
+	test.PromoteTag = &suite.Spec.PromoteTag
+	test.Steps = make([]*gqlclient.TestStepAttributes, 0)
 
 	statuses := stepStatuses(suite)
 	for _, step := range suite.Spec.Steps {
@@ -36,12 +38,15 @@ func suiteToPluralTest(suite *testv1alpha1.TestSuite) (test plural.Test) {
 		if ok {
 			stepStatus = status.Status
 		}
-		test.Steps = append(test.Steps, &plural.TestStep{
-			Id:          status.PluralId,
-			Name:        step.Name,
-			Description: step.Description,
-			Status:      stepStatus,
-		})
+
+		tsa := &gqlclient.TestStepAttributes{
+			ID:          &status.PluralId,
+			Name:        &step.Name,
+			Description: &step.Description,
+		}
+		tsaStatus := gqlclient.TestStatus(stepStatus)
+		tsa.Status = &tsaStatus
+		test.Steps = append(test.Steps, tsa)
 	}
 
 	return
