@@ -40,9 +40,11 @@ func suiteToPluralTest(suite *testv1alpha1.TestSuite) (test gqlclient.TestAttrib
 		}
 
 		tsa := &gqlclient.TestStepAttributes{
-			ID:          &status.PluralId,
 			Name:        &step.Name,
 			Description: &step.Description,
+		}
+		if status.PluralId != "" {
+			tsa.ID = &status.PluralId
 		}
 		tsaStatus := gqlclient.TestStatus(stepStatus)
 		tsa.Status = &tsaStatus
