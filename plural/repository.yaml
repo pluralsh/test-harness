@@ -1,5 +1,5 @@
 name: test-harness
-description: test-harness deployed on plural
+description: Plural's own testing framework, deployed with... well, Plural.
 category: DEVOPS
 private: false
 icon: plural/icons/plural-logo.png
