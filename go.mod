@@ -10,8 +10,8 @@ require (
 	github.com/onsi/gomega v1.17.0
 	github.com/pluralsh/gqlclient v1.1.6
 	github.com/sethvargo/go-retry v0.2.3
-	k8s.io/api v0.23.3
-	k8s.io/apimachinery v0.23.3
-	k8s.io/client-go v0.23.3
-	sigs.k8s.io/controller-runtime v0.11.1
+	k8s.io/api v0.23.5
+	k8s.io/apimachinery v0.23.5
+	k8s.io/client-go v0.23.5
+	sigs.k8s.io/controller-runtime v0.11.2
 )
