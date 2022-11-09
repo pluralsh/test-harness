@@ -30,7 +30,7 @@ jobs:
     - run: make docker-push
 
     # publish to plural now
-    - uses: hashicorp/setup-terraform@v1
+    - uses: hashicorp/setup-terraform@v2
     - uses: azure/setup-helm@v1
       with:
         version: latest
