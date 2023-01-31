@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"github.com/pluralsh/gqlclient"
+	"github.com/pluralsh/gqlclient/pkg/utils"
 	testv1alpha1 "github.com/pluralsh/test-harness/api/v1alpha1"
 	"github.com/pluralsh/test-harness/pkg/plural"
 )
@@ -29,6 +30,7 @@ func suiteToPluralTest(suite *testv1alpha1.TestSuite) (test gqlclient.TestAttrib
 	test.Name = &suite.Name
 	test.Status = &status
 	test.PromoteTag = &suite.Spec.PromoteTag
+	test.Tags = utils.ToStringArrayPtr(suite.Spec.Tags)
 	test.Steps = make([]*gqlclient.TestStepAttributes, 0)
 
 	statuses := stepStatuses(suite)
