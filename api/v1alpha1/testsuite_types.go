@@ -38,6 +38,9 @@ type TestSuiteSpec struct {
 	// the tag you'll promote to on test success
 	PromoteTag string `json:"promoteTag,omitempty"`
 
+	// the test tags
+	Tags []string `json:"tags,omitempty"`
+
 	// the repository this test is run in
 	Repository string `json:"repository,omitempty"`
 
