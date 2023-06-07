@@ -1,10 +1,9 @@
-
 ---
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    controller-gen.kubebuilder.io/version: v0.7.0
+    controller-gen.kubebuilder.io/version: v0.11.3
   creationTimestamp: null
   name: testsuites.test.plural.sh
 spec:
@@ -179,6 +178,7 @@ spec:
                                               type: object
                                             type: array
                                         type: object
+                                        x-kubernetes-map-type: atomic
                                       weight:
                                         description: Weight associated with matching
                                           the corresponding nodeSelectorTerm, in the
@@ -289,10 +289,12 @@ spec:
                                               type: object
                                             type: array
                                         type: object
+                                        x-kubernetes-map-type: atomic
                                       type: array
                                   required:
                                   - nodeSelectorTerms
                                   type: object
+                                  x-kubernetes-map-type: atomic
                               type: object
                             podAffinity:
                               description: Describes pod affinity scheduling rules
@@ -379,6 +381,7 @@ spec:
                                                   ANDed.
                                                 type: object
                                             type: object
+                                            x-kubernetes-map-type: atomic
                                           namespaceSelector:
                                             description: A label query over the set
                                               of namespaces that the term applies
@@ -442,6 +445,7 @@ spec:
                                                   ANDed.
                                                 type: object
                                             type: object
+                                            x-kubernetes-map-type: atomic
                                           namespaces:
                                             description: namespaces specifies a static
                                               list of namespace names that the term
@@ -552,6 +556,7 @@ spec:
                                               only "value". The requirements are ANDed.
                                             type: object
                                         type: object
+                                        x-kubernetes-map-type: atomic
                                       namespaceSelector:
                                         description: A label query over the set of
                                           namespaces that the term applies to. The
@@ -610,6 +615,7 @@ spec:
                                               only "value". The requirements are ANDed.
                                             type: object
                                         type: object
+                                        x-kubernetes-map-type: atomic
                                       namespaces:
                                         description: namespaces specifies a static
                                           list of namespace names that the term applies
@@ -722,6 +728,7 @@ spec:
                                                   ANDed.
                                                 type: object
                                             type: object
+                                            x-kubernetes-map-type: atomic
                                           namespaceSelector:
                                             description: A label query over the set
                                               of namespaces that the term applies
@@ -785,6 +792,7 @@ spec:
                                                   ANDed.
                                                 type: object
                                             type: object
+                                            x-kubernetes-map-type: atomic
                                           namespaces:
                                             description: namespaces specifies a static
                                               list of namespace names that the term
@@ -896,6 +904,7 @@ spec:
                                               only "value". The requirements are ANDed.
                                             type: object
                                         type: object
+                                        x-kubernetes-map-type: atomic
                                       namespaceSelector:
                                         description: A label query over the set of
                                           namespaces that the term applies to. The
@@ -954,6 +963,7 @@ spec:
                                               only "value". The requirements are ANDed.
                                             type: object
                                         type: object
+                                        x-kubernetes-map-type: atomic
                                       namespaces:
                                         description: namespaces specifies a static
                                           list of namespace names that the term applies
@@ -1019,6 +1029,7 @@ spec:
                                   required:
                                   - key
                                   type: object
+                                  x-kubernetes-map-type: atomic
                                 url:
                                   description: URL of the artifact
                                   type: string
@@ -1043,6 +1054,7 @@ spec:
                                   required:
                                   - key
                                   type: object
+                                  x-kubernetes-map-type: atomic
                               required:
                               - url
                               type: object
@@ -1071,6 +1083,7 @@ spec:
                                   required:
                                   - key
                                   type: object
+                                  x-kubernetes-map-type: atomic
                                 blob:
                                   description: Blob is the blob name (i.e., path)
                                     in the container where the artifact resides
@@ -1123,6 +1136,7 @@ spec:
                                   required:
                                   - key
                                   type: object
+                                  x-kubernetes-map-type: atomic
                               required:
                               - key
                               type: object
@@ -1174,6 +1188,7 @@ spec:
                                   required:
                                   - key
                                   type: object
+                                  x-kubernetes-map-type: atomic
                                 repo:
                                   description: Repo is the git repository
                                   type: string
@@ -1206,6 +1221,7 @@ spec:
                                   required:
                                   - key
                                   type: object
+                                  x-kubernetes-map-type: atomic
                                 usernameSecret:
                                   description: UsernameSecret is the secret selector
                                     to the repository username
@@ -1227,6 +1243,7 @@ spec:
                                   required:
                                   - key
                                   type: object
+                                  x-kubernetes-map-type: atomic
                               required:
                               - repo
                               type: object
@@ -1270,6 +1287,7 @@ spec:
                                   required:
                                   - key
                                   type: object
+                                  x-kubernetes-map-type: atomic
                                 krbConfigConfigMap:
                                   description: KrbConfig is the configmap selector
                                     for Kerberos config as string It must be set if
@@ -1291,6 +1309,7 @@ spec:
                                   required:
                                   - key
                                   type: object
+                                  x-kubernetes-map-type: atomic
                                 krbKeytabSecret:
                                   description: KrbKeytabSecret is the secret selector
                                     for Kerberos keytab Either ccache or keytab can
@@ -1313,6 +1332,7 @@ spec:
                                   required:
                                   - key
                                   type: object
+                                  x-kubernetes-map-type: atomic
                                 krbRealm:
                                   description: KrbRealm is the Kerberos realm used
                                     with Kerberos keytab It must be set if keytab
@@ -1367,6 +1387,7 @@ spec:
                                           required:
                                           - key
                                           type: object
+                                          x-kubernetes-map-type: atomic
                                         usernameSecret:
                                           description: UsernameSecret is the secret
                                             selector to the repository username
@@ -1389,6 +1410,7 @@ spec:
                                           required:
                                           - key
                                           type: object
+                                          x-kubernetes-map-type: atomic
                                       type: object
                                     clientCert:
                                       description: ClientCertAuth holds necessary
@@ -1417,6 +1439,7 @@ spec:
                                           required:
                                           - key
                                           type: object
+                                          x-kubernetes-map-type: atomic
                                         clientKeySecret:
                                           description: SecretKeySelector selects a
                                             key of a Secret.
@@ -1439,6 +1462,7 @@ spec:
                                           required:
                                           - key
                                           type: object
+                                          x-kubernetes-map-type: atomic
                                       type: object
                                     oauth2:
                                       description: OAuth2Auth holds all information
@@ -1466,6 +1490,7 @@ spec:
                                           required:
                                           - key
                                           type: object
+                                          x-kubernetes-map-type: atomic
                                         clientSecretSecret:
                                           description: SecretKeySelector selects a
                                             key of a Secret.
@@ -1488,6 +1513,7 @@ spec:
                                           required:
                                           - key
                                           type: object
+                                          x-kubernetes-map-type: atomic
                                         endpointParams:
                                           items:
                                             description: EndpointParam is for requesting
@@ -1531,6 +1557,7 @@ spec:
                                           required:
                                           - key
                                           type: object
+                                          x-kubernetes-map-type: atomic
                                       type: object
                                   type: object
                                 headers:
@@ -1583,6 +1610,7 @@ spec:
                                   required:
                                   - key
                                   type: object
+                                  x-kubernetes-map-type: atomic
                                 bucket:
                                   description: Bucket is the name of the bucket
                                   type: string
@@ -1637,6 +1665,7 @@ spec:
                                   required:
                                   - key
                                   type: object
+                                  x-kubernetes-map-type: atomic
                                 securityToken:
                                   description: 'SecurityToken is the user''s temporary
                                     security token. For more details, check out: https://www.alibabacloud.com/help/doc-detail/100624.htm'
@@ -1678,6 +1707,7 @@ spec:
                                   required:
                                   - key
                                   type: object
+                                  x-kubernetes-map-type: atomic
                                 bucket:
                                   description: Bucket is the name of the bucket
                                   type: string
@@ -1735,6 +1765,7 @@ spec:
                                       required:
                                       - key
                                       type: object
+                                      x-kubernetes-map-type: atomic
                                   type: object
                                 endpoint:
                                   description: Endpoint is the hostname of the bucket
@@ -1777,6 +1808,7 @@ spec:
                                   required:
                                   - key
                                   type: object
+                                  x-kubernetes-map-type: atomic
                                 useSDKCreds:
                                   description: UseSDKCreds tells the driver to figure
                                     out credentials based on sdk defaults.
@@ -1870,6 +1902,7 @@ spec:
                                         required:
                                         - key
                                         type: object
+                                        x-kubernetes-map-type: atomic
                                       fieldRef:
                                         description: 'Selects a field of the pod:
                                           supports metadata.name, metadata.namespace,
@@ -1889,6 +1922,7 @@ spec:
                                         required:
                                         - fieldPath
                                         type: object
+                                        x-kubernetes-map-type: atomic
                                       resourceFieldRef:
                                         description: 'Selects a resource of the container:
                                           only resources limits and requests (limits.cpu,
@@ -1915,6 +1949,7 @@ spec:
                                         required:
                                         - resource
                                         type: object
+                                        x-kubernetes-map-type: atomic
                                       secretKeyRef:
                                         description: Selects a key of a secret in
                                           the pod's namespace
@@ -1937,6 +1972,7 @@ spec:
                                         required:
                                         - key
                                         type: object
+                                        x-kubernetes-map-type: atomic
                                     type: object
                                 required:
                                 - name
@@ -1969,6 +2005,7 @@ spec:
                                           must be defined
                                         type: boolean
                                     type: object
+                                    x-kubernetes-map-type: atomic
                                   prefix:
                                     description: An optional identifier to prepend
                                       to each key in the ConfigMap. Must be a C_IDENTIFIER.
@@ -1987,6 +2024,7 @@ spec:
                                           be defined
                                         type: boolean
                                     type: object
+                                    x-kubernetes-map-type: atomic
                                 type: object
                               type: array
                             image:
@@ -3169,6 +3207,7 @@ spec:
                                               required:
                                               - key
                                               type: object
+                                              x-kubernetes-map-type: atomic
                                             fieldRef:
                                               description: 'Selects a field of the
                                                 pod: supports metadata.name, metadata.namespace,
@@ -3188,6 +3227,7 @@ spec:
                                               required:
                                               - fieldPath
                                               type: object
+                                              x-kubernetes-map-type: atomic
                                             resourceFieldRef:
                                               description: 'Selects a resource of
                                                 the container: only resources limits
@@ -3217,6 +3257,7 @@ spec:
                                               required:
                                               - resource
                                               type: object
+                                              x-kubernetes-map-type: atomic
                                             secretKeyRef:
                                               description: Selects a key of a secret
                                                 in the pod's namespace
@@ -3239,6 +3280,7 @@ spec:
                                               required:
                                               - key
                                               type: object
+                                              x-kubernetes-map-type: atomic
                                           type: object
                                       required:
                                       - name
@@ -3272,6 +3314,7 @@ spec:
                                                 must be defined
                                               type: boolean
                                           type: object
+                                          x-kubernetes-map-type: atomic
                                         prefix:
                                           description: An optional identifier to prepend
                                             to each key in the ConfigMap. Must be
@@ -3291,6 +3334,7 @@ spec:
                                                 must be defined
                                               type: boolean
                                           type: object
+                                          x-kubernetes-map-type: atomic
                                       type: object
                                     type: array
                                   image:
@@ -4677,6 +4721,7 @@ spec:
                                                   required:
                                                   - key
                                                   type: object
+                                                  x-kubernetes-map-type: atomic
                                                 url:
                                                   description: URL of the artifact
                                                   type: string
@@ -4704,6 +4749,7 @@ spec:
                                                   required:
                                                   - key
                                                   type: object
+                                                  x-kubernetes-map-type: atomic
                                               required:
                                               - url
                                               type: object
@@ -4735,6 +4781,7 @@ spec:
                                                   required:
                                                   - key
                                                   type: object
+                                                  x-kubernetes-map-type: atomic
                                                 blob:
                                                   description: Blob is the blob name
                                                     (i.e., path) in the container
@@ -4809,6 +4856,7 @@ spec:
                                                   required:
                                                   - key
                                                   type: object
+                                                  x-kubernetes-map-type: atomic
                                               required:
                                               - key
                                               type: object
@@ -4868,6 +4916,7 @@ spec:
                                                   required:
                                                   - key
                                                   type: object
+                                                  x-kubernetes-map-type: atomic
                                                 repo:
                                                   description: Repo is the git repository
                                                   type: string
@@ -4904,6 +4953,7 @@ spec:
                                                   required:
                                                   - key
                                                   type: object
+                                                  x-kubernetes-map-type: atomic
                                                 usernameSecret:
                                                   description: UsernameSecret is the
                                                     secret selector to the repository
@@ -4928,6 +4978,7 @@ spec:
                                                   required:
                                                   - key
                                                   type: object
+                                                  x-kubernetes-map-type: atomic
                                               required:
                                               - repo
                                               type: object
@@ -4982,6 +5033,7 @@ spec:
                                                   required:
                                                   - key
                                                   type: object
+                                                  x-kubernetes-map-type: atomic
                                                 krbConfigConfigMap:
                                                   description: KrbConfig is the configmap
                                                     selector for Kerberos config as
@@ -5005,6 +5057,7 @@ spec:
                                                   required:
                                                   - key
                                                   type: object
+                                                  x-kubernetes-map-type: atomic
                                                 krbKeytabSecret:
                                                   description: KrbKeytabSecret is
                                                     the secret selector for Kerberos
@@ -5030,6 +5083,7 @@ spec:
                                                   required:
                                                   - key
                                                   type: object
+                                                  x-kubernetes-map-type: atomic
                                                 krbRealm:
                                                   description: KrbRealm is the Kerberos
                                                     realm used with Kerberos keytab
@@ -5095,6 +5149,7 @@ spec:
                                                           required:
                                                           - key
                                                           type: object
+                                                          x-kubernetes-map-type: atomic
                                                         usernameSecret:
                                                           description: UsernameSecret
                                                             is the secret selector
@@ -5123,6 +5178,7 @@ spec:
                                                           required:
                                                           - key
                                                           type: object
+                                                          x-kubernetes-map-type: atomic
                                                       type: object
                                                     clientCert:
                                                       description: ClientCertAuth
@@ -5157,6 +5213,7 @@ spec:
                                                           required:
                                                           - key
                                                           type: object
+                                                          x-kubernetes-map-type: atomic
                                                         clientKeySecret:
                                                           description: SecretKeySelector
                                                             selects a key of a Secret.
@@ -5184,6 +5241,7 @@ spec:
                                                           required:
                                                           - key
                                                           type: object
+                                                          x-kubernetes-map-type: atomic
                                                       type: object
                                                     oauth2:
                                                       description: OAuth2Auth holds
@@ -5218,6 +5276,7 @@ spec:
                                                           required:
                                                           - key
                                                           type: object
+                                                          x-kubernetes-map-type: atomic
                                                         clientSecretSecret:
                                                           description: SecretKeySelector
                                                             selects a key of a Secret.
@@ -5245,6 +5304,7 @@ spec:
                                                           required:
                                                           - key
                                                           type: object
+                                                          x-kubernetes-map-type: atomic
                                                         endpointParams:
                                                           items:
                                                             description: EndpointParam
@@ -5296,6 +5356,7 @@ spec:
                                                           required:
                                                           - key
                                                           type: object
+                                                          x-kubernetes-map-type: atomic
                                                       type: object
                                                   type: object
                                                 headers:
@@ -5370,6 +5431,7 @@ spec:
                                                   required:
                                                   - key
                                                   type: object
+                                                  x-kubernetes-map-type: atomic
                                                 bucket:
                                                   description: Bucket is the name
                                                     of the bucket
@@ -5432,6 +5494,7 @@ spec:
                                                   required:
                                                   - key
                                                   type: object
+                                                  x-kubernetes-map-type: atomic
                                                 securityToken:
                                                   description: 'SecurityToken is the
                                                     user''s temporary security token.
@@ -5488,6 +5551,7 @@ spec:
                                                   required:
                                                   - key
                                                   type: object
+                                                  x-kubernetes-map-type: atomic
                                                 bucket:
                                                   description: Bucket is the name
                                                     of the bucket
@@ -5559,6 +5623,7 @@ spec:
                                                       required:
                                                       - key
                                                       type: object
+                                                      x-kubernetes-map-type: atomic
                                                   type: object
                                                 endpoint:
                                                   description: Endpoint is the hostname
@@ -5605,6 +5670,7 @@ spec:
                                                   required:
                                                   - key
                                                   type: object
+                                                  x-kubernetes-map-type: atomic
                                                 useSDKCreds:
                                                   description: UseSDKCreds tells the
                                                     driver to figure out credentials
@@ -5693,6 +5759,7 @@ spec:
                                                   required:
                                                   - key
                                                   type: object
+                                                  x-kubernetes-map-type: atomic
                                                 default:
                                                   description: Default specifies a
                                                     value to be used if retrieving
@@ -5889,6 +5956,7 @@ spec:
                                                         required:
                                                         - key
                                                         type: object
+                                                        x-kubernetes-map-type: atomic
                                                       url:
                                                         description: URL of the artifact
                                                         type: string
@@ -5919,6 +5987,7 @@ spec:
                                                         required:
                                                         - key
                                                         type: object
+                                                        x-kubernetes-map-type: atomic
                                                     required:
                                                     - url
                                                     type: object
@@ -5954,6 +6023,7 @@ spec:
                                                         required:
                                                         - key
                                                         type: object
+                                                        x-kubernetes-map-type: atomic
                                                       blob:
                                                         description: Blob is the blob
                                                           name (i.e., path) in the
@@ -6036,6 +6106,7 @@ spec:
                                                         required:
                                                         - key
                                                         type: object
+                                                        x-kubernetes-map-type: atomic
                                                     required:
                                                     - key
                                                     type: object
@@ -6101,6 +6172,7 @@ spec:
                                                         required:
                                                         - key
                                                         type: object
+                                                        x-kubernetes-map-type: atomic
                                                       repo:
                                                         description: Repo is the git
                                                           repository
@@ -6143,6 +6215,7 @@ spec:
                                                         required:
                                                         - key
                                                         type: object
+                                                        x-kubernetes-map-type: atomic
                                                       usernameSecret:
                                                         description: UsernameSecret
                                                           is the secret selector to
@@ -6170,6 +6243,7 @@ spec:
                                                         required:
                                                         - key
                                                         type: object
+                                                        x-kubernetes-map-type: atomic
                                                     required:
                                                     - repo
                                                     type: object
@@ -6232,6 +6306,7 @@ spec:
                                                         required:
                                                         - key
                                                         type: object
+                                                        x-kubernetes-map-type: atomic
                                                       krbConfigConfigMap:
                                                         description: KrbConfig is
                                                           the configmap selector for
@@ -6259,6 +6334,7 @@ spec:
                                                         required:
                                                         - key
                                                         type: object
+                                                        x-kubernetes-map-type: atomic
                                                       krbKeytabSecret:
                                                         description: KrbKeytabSecret
                                                           is the secret selector for
@@ -6288,6 +6364,7 @@ spec:
                                                         required:
                                                         - key
                                                         type: object
+                                                        x-kubernetes-map-type: atomic
                                                       krbRealm:
                                                         description: KrbRealm is the
                                                           Kerberos realm used with
@@ -6361,6 +6438,7 @@ spec:
                                                                 required:
                                                                 - key
                                                                 type: object
+                                                                x-kubernetes-map-type: atomic
                                                               usernameSecret:
                                                                 description: UsernameSecret
                                                                   is the secret selector
@@ -6393,6 +6471,7 @@ spec:
                                                                 required:
                                                                 - key
                                                                 type: object
+                                                                x-kubernetes-map-type: atomic
                                                             type: object
                                                           clientCert:
                                                             description: ClientCertAuth
@@ -6431,6 +6510,7 @@ spec:
                                                                 required:
                                                                 - key
                                                                 type: object
+                                                                x-kubernetes-map-type: atomic
                                                               clientKeySecret:
                                                                 description: SecretKeySelector
                                                                   selects a key of
@@ -6462,6 +6542,7 @@ spec:
                                                                 required:
                                                                 - key
                                                                 type: object
+                                                                x-kubernetes-map-type: atomic
                                                             type: object
                                                           oauth2:
                                                             description: OAuth2Auth
@@ -6500,6 +6581,7 @@ spec:
                                                                 required:
                                                                 - key
                                                                 type: object
+                                                                x-kubernetes-map-type: atomic
                                                               clientSecretSecret:
                                                                 description: SecretKeySelector
                                                                   selects a key of
@@ -6531,6 +6613,7 @@ spec:
                                                                 required:
                                                                 - key
                                                                 type: object
+                                                                x-kubernetes-map-type: atomic
                                                               endpointParams:
                                                                 items:
                                                                   description: EndpointParam
@@ -6590,6 +6673,7 @@ spec:
                                                                 required:
                                                                 - key
                                                                 type: object
+                                                                x-kubernetes-map-type: atomic
                                                             type: object
                                                         type: object
                                                       headers:
@@ -6671,6 +6755,7 @@ spec:
                                                         required:
                                                         - key
                                                         type: object
+                                                        x-kubernetes-map-type: atomic
                                                       bucket:
                                                         description: Bucket is the
                                                           name of the bucket
@@ -6740,6 +6825,7 @@ spec:
                                                         required:
                                                         - key
                                                         type: object
+                                                        x-kubernetes-map-type: atomic
                                                       securityToken:
                                                         description: 'SecurityToken
                                                           is the user''s temporary
@@ -6800,6 +6886,7 @@ spec:
                                                         required:
                                                         - key
                                                         type: object
+                                                        x-kubernetes-map-type: atomic
                                                       bucket:
                                                         description: Bucket is the
                                                           name of the bucket
@@ -6878,6 +6965,7 @@ spec:
                                                             required:
                                                             - key
                                                             type: object
+                                                            x-kubernetes-map-type: atomic
                                                         type: object
                                                       endpoint:
                                                         description: Endpoint is the
@@ -6929,6 +7017,7 @@ spec:
                                                         required:
                                                         - key
                                                         type: object
+                                                        x-kubernetes-map-type: atomic
                                                       useSDKCreds:
                                                         description: UseSDKCreds tells
                                                           the driver to figure out
@@ -7030,6 +7119,7 @@ spec:
                                                         required:
                                                         - key
                                                         type: object
+                                                        x-kubernetes-map-type: atomic
                                                       default:
                                                         description: Default specifies
                                                           a value to be used if retrieving
@@ -7311,6 +7401,7 @@ spec:
                                           required:
                                           - key
                                           type: object
+                                          x-kubernetes-map-type: atomic
                                         url:
                                           description: URL of the artifact
                                           type: string
@@ -7336,6 +7427,7 @@ spec:
                                           required:
                                           - key
                                           type: object
+                                          x-kubernetes-map-type: atomic
                                       required:
                                       - url
                                       type: object
@@ -7366,6 +7458,7 @@ spec:
                                           required:
                                           - key
                                           type: object
+                                          x-kubernetes-map-type: atomic
                                         blob:
                                           description: Blob is the blob name (i.e.,
                                             path) in the container where the artifact
@@ -7435,6 +7528,7 @@ spec:
                                           required:
                                           - key
                                           type: object
+                                          x-kubernetes-map-type: atomic
                                       required:
                                       - key
                                       type: object
@@ -7489,6 +7583,7 @@ spec:
                                           required:
                                           - key
                                           type: object
+                                          x-kubernetes-map-type: atomic
                                         repo:
                                           description: Repo is the git repository
                                           type: string
@@ -7523,6 +7618,7 @@ spec:
                                           required:
                                           - key
                                           type: object
+                                          x-kubernetes-map-type: atomic
                                         usernameSecret:
                                           description: UsernameSecret is the secret
                                             selector to the repository username
@@ -7545,6 +7641,7 @@ spec:
                                           required:
                                           - key
                                           type: object
+                                          x-kubernetes-map-type: atomic
                                       required:
                                       - repo
                                       type: object
@@ -7596,6 +7693,7 @@ spec:
                                           required:
                                           - key
                                           type: object
+                                          x-kubernetes-map-type: atomic
                                         krbConfigConfigMap:
                                           description: KrbConfig is the configmap
                                             selector for Kerberos config as string
@@ -7618,6 +7716,7 @@ spec:
                                           required:
                                           - key
                                           type: object
+                                          x-kubernetes-map-type: atomic
                                         krbKeytabSecret:
                                           description: KrbKeytabSecret is the secret
                                             selector for Kerberos keytab Either ccache
@@ -7641,6 +7740,7 @@ spec:
                                           required:
                                           - key
                                           type: object
+                                          x-kubernetes-map-type: atomic
                                         krbRealm:
                                           description: KrbRealm is the Kerberos realm
                                             used with Kerberos keytab It must be set
@@ -7700,6 +7800,7 @@ spec:
                                                   required:
                                                   - key
                                                   type: object
+                                                  x-kubernetes-map-type: atomic
                                                 usernameSecret:
                                                   description: UsernameSecret is the
                                                     secret selector to the repository
@@ -7724,6 +7825,7 @@ spec:
                                                   required:
                                                   - key
                                                   type: object
+                                                  x-kubernetes-map-type: atomic
                                               type: object
                                             clientCert:
                                               description: ClientCertAuth holds necessary
@@ -7753,6 +7855,7 @@ spec:
                                                   required:
                                                   - key
                                                   type: object
+                                                  x-kubernetes-map-type: atomic
                                                 clientKeySecret:
                                                   description: SecretKeySelector selects
                                                     a key of a Secret.
@@ -7776,6 +7879,7 @@ spec:
                                                   required:
                                                   - key
                                                   type: object
+                                                  x-kubernetes-map-type: atomic
                                               type: object
                                             oauth2:
                                               description: OAuth2Auth holds all information
@@ -7805,6 +7909,7 @@ spec:
                                                   required:
                                                   - key
                                                   type: object
+                                                  x-kubernetes-map-type: atomic
                                                 clientSecretSecret:
                                                   description: SecretKeySelector selects
                                                     a key of a Secret.
@@ -7828,6 +7933,7 @@ spec:
                                                   required:
                                                   - key
                                                   type: object
+                                                  x-kubernetes-map-type: atomic
                                                 endpointParams:
                                                   items:
                                                     description: EndpointParam is
@@ -7875,6 +7981,7 @@ spec:
                                                   required:
                                                   - key
                                                   type: object
+                                                  x-kubernetes-map-type: atomic
                                               type: object
                                           type: object
                                         headers:
@@ -7944,6 +8051,7 @@ spec:
                                           required:
                                           - key
                                           type: object
+                                          x-kubernetes-map-type: atomic
                                         bucket:
                                           description: Bucket is the name of the bucket
                                           type: string
@@ -8001,6 +8109,7 @@ spec:
                                           required:
                                           - key
                                           type: object
+                                          x-kubernetes-map-type: atomic
                                         securityToken:
                                           description: 'SecurityToken is the user''s
                                             temporary security token. For more details,
@@ -8054,6 +8163,7 @@ spec:
                                           required:
                                           - key
                                           type: object
+                                          x-kubernetes-map-type: atomic
                                         bucket:
                                           description: Bucket is the name of the bucket
                                           type: string
@@ -8116,6 +8226,7 @@ spec:
                                               required:
                                               - key
                                               type: object
+                                              x-kubernetes-map-type: atomic
                                           type: object
                                         endpoint:
                                           description: Endpoint is the hostname of
@@ -8159,6 +8270,7 @@ spec:
                                           required:
                                           - key
                                           type: object
+                                          x-kubernetes-map-type: atomic
                                         useSDKCreds:
                                           description: UseSDKCreds tells the driver
                                             to figure out credentials based on sdk
@@ -8269,6 +8381,7 @@ spec:
                                         required:
                                         - key
                                         type: object
+                                        x-kubernetes-map-type: atomic
                                     type: object
                                 required:
                                 - name
@@ -8382,6 +8495,7 @@ spec:
                                           required:
                                           - key
                                           type: object
+                                          x-kubernetes-map-type: atomic
                                         fieldRef:
                                           description: 'Selects a field of the pod:
                                             supports metadata.name, metadata.namespace,
@@ -8401,6 +8515,7 @@ spec:
                                           required:
                                           - fieldPath
                                           type: object
+                                          x-kubernetes-map-type: atomic
                                         resourceFieldRef:
                                           description: 'Selects a resource of the
                                             container: only resources limits and requests
@@ -8428,6 +8543,7 @@ spec:
                                           required:
                                           - resource
                                           type: object
+                                          x-kubernetes-map-type: atomic
                                         secretKeyRef:
                                           description: Selects a key of a secret in
                                             the pod's namespace
@@ -8450,6 +8566,7 @@ spec:
                                           required:
                                           - key
                                           type: object
+                                          x-kubernetes-map-type: atomic
                                       type: object
                                   required:
                                   - name
@@ -8482,6 +8599,7 @@ spec:
                                             must be defined
                                           type: boolean
                                       type: object
+                                      x-kubernetes-map-type: atomic
                                     prefix:
                                       description: An optional identifier to prepend
                                         to each key in the ConfigMap. Must be a C_IDENTIFIER.
@@ -8500,6 +8618,7 @@ spec:
                                             must be defined
                                           type: boolean
                                       type: object
+                                      x-kubernetes-map-type: atomic
                                   type: object
                                 type: array
                               image:
@@ -9734,6 +9853,7 @@ spec:
                                         required:
                                         - key
                                         type: object
+                                        x-kubernetes-map-type: atomic
                                       url:
                                         description: URL of the artifact
                                         type: string
@@ -9759,6 +9879,7 @@ spec:
                                         required:
                                         - key
                                         type: object
+                                        x-kubernetes-map-type: atomic
                                     required:
                                     - url
                                     type: object
@@ -9789,6 +9910,7 @@ spec:
                                         required:
                                         - key
                                         type: object
+                                        x-kubernetes-map-type: atomic
                                       blob:
                                         description: Blob is the blob name (i.e.,
                                           path) in the container where the artifact
@@ -9856,6 +9978,7 @@ spec:
                                         required:
                                         - key
                                         type: object
+                                        x-kubernetes-map-type: atomic
                                     required:
                                     - key
                                     type: object
@@ -9910,6 +10033,7 @@ spec:
                                         required:
                                         - key
                                         type: object
+                                        x-kubernetes-map-type: atomic
                                       repo:
                                         description: Repo is the git repository
                                         type: string
@@ -9943,6 +10067,7 @@ spec:
                                         required:
                                         - key
                                         type: object
+                                        x-kubernetes-map-type: atomic
                                       usernameSecret:
                                         description: UsernameSecret is the secret
                                           selector to the repository username
@@ -9965,6 +10090,7 @@ spec:
                                         required:
                                         - key
                                         type: object
+                                        x-kubernetes-map-type: atomic
                                     required:
                                     - repo
                                     type: object
@@ -10016,6 +10142,7 @@ spec:
                                         required:
                                         - key
                                         type: object
+                                        x-kubernetes-map-type: atomic
                                       krbConfigConfigMap:
                                         description: KrbConfig is the configmap selector
                                           for Kerberos config as string It must be
@@ -10037,6 +10164,7 @@ spec:
                                         required:
                                         - key
                                         type: object
+                                        x-kubernetes-map-type: atomic
                                       krbKeytabSecret:
                                         description: KrbKeytabSecret is the secret
                                           selector for Kerberos keytab Either ccache
@@ -10060,6 +10188,7 @@ spec:
                                         required:
                                         - key
                                         type: object
+                                        x-kubernetes-map-type: atomic
                                       krbRealm:
                                         description: KrbRealm is the Kerberos realm
                                           used with Kerberos keytab It must be set
@@ -10116,6 +10245,7 @@ spec:
                                                 required:
                                                 - key
                                                 type: object
+                                                x-kubernetes-map-type: atomic
                                               usernameSecret:
                                                 description: UsernameSecret is the
                                                   secret selector to the repository
@@ -10139,6 +10269,7 @@ spec:
                                                 required:
                                                 - key
                                                 type: object
+                                                x-kubernetes-map-type: atomic
                                             type: object
                                           clientCert:
                                             description: ClientCertAuth holds necessary
@@ -10167,6 +10298,7 @@ spec:
                                                 required:
                                                 - key
                                                 type: object
+                                                x-kubernetes-map-type: atomic
                                               clientKeySecret:
                                                 description: SecretKeySelector selects
                                                   a key of a Secret.
@@ -10189,6 +10321,7 @@ spec:
                                                 required:
                                                 - key
                                                 type: object
+                                                x-kubernetes-map-type: atomic
                                             type: object
                                           oauth2:
                                             description: OAuth2Auth holds all information
@@ -10217,6 +10350,7 @@ spec:
                                                 required:
                                                 - key
                                                 type: object
+                                                x-kubernetes-map-type: atomic
                                               clientSecretSecret:
                                                 description: SecretKeySelector selects
                                                   a key of a Secret.
@@ -10239,6 +10373,7 @@ spec:
                                                 required:
                                                 - key
                                                 type: object
+                                                x-kubernetes-map-type: atomic
                                               endpointParams:
                                                 items:
                                                   description: EndpointParam is for
@@ -10283,6 +10418,7 @@ spec:
                                                 required:
                                                 - key
                                                 type: object
+                                                x-kubernetes-map-type: atomic
                                             type: object
                                         type: object
                                       headers:
@@ -10352,6 +10488,7 @@ spec:
                                         required:
                                         - key
                                         type: object
+                                        x-kubernetes-map-type: atomic
                                       bucket:
                                         description: Bucket is the name of the bucket
                                         type: string
@@ -10409,6 +10546,7 @@ spec:
                                         required:
                                         - key
                                         type: object
+                                        x-kubernetes-map-type: atomic
                                       securityToken:
                                         description: 'SecurityToken is the user''s
                                           temporary security token. For more details,
@@ -10462,6 +10600,7 @@ spec:
                                         required:
                                         - key
                                         type: object
+                                        x-kubernetes-map-type: atomic
                                       bucket:
                                         description: Bucket is the name of the bucket
                                         type: string
@@ -10523,6 +10662,7 @@ spec:
                                             required:
                                             - key
                                             type: object
+                                            x-kubernetes-map-type: atomic
                                         type: object
                                       endpoint:
                                         description: Endpoint is the hostname of the
@@ -10566,6 +10706,7 @@ spec:
                                         required:
                                         - key
                                         type: object
+                                        x-kubernetes-map-type: atomic
                                       useSDKCreds:
                                         description: UseSDKCreds tells the driver
                                           to figure out credentials based on sdk defaults.
@@ -10645,6 +10786,7 @@ spec:
                                         required:
                                         - key
                                         type: object
+                                        x-kubernetes-map-type: atomic
                                       default:
                                         description: Default specifies a value to
                                           be used if retrieving the value from the
@@ -10714,6 +10856,7 @@ spec:
                                   required:
                                   - key
                                   type: object
+                                  x-kubernetes-map-type: atomic
                               required:
                               - configMap
                               type: object
@@ -10941,6 +11084,7 @@ spec:
                                         required:
                                         - key
                                         type: object
+                                        x-kubernetes-map-type: atomic
                                       url:
                                         description: URL of the artifact
                                         type: string
@@ -10966,6 +11110,7 @@ spec:
                                         required:
                                         - key
                                         type: object
+                                        x-kubernetes-map-type: atomic
                                     required:
                                     - url
                                     type: object
@@ -10996,6 +11141,7 @@ spec:
                                         required:
                                         - key
                                         type: object
+                                        x-kubernetes-map-type: atomic
                                       blob:
                                         description: Blob is the blob name (i.e.,
                                           path) in the container where the artifact
@@ -11063,6 +11209,7 @@ spec:
                                         required:
                                         - key
                                         type: object
+                                        x-kubernetes-map-type: atomic
                                     required:
                                     - key
                                     type: object
@@ -11117,6 +11264,7 @@ spec:
                                         required:
                                         - key
                                         type: object
+                                        x-kubernetes-map-type: atomic
                                       repo:
                                         description: Repo is the git repository
                                         type: string
@@ -11150,6 +11298,7 @@ spec:
                                         required:
                                         - key
                                         type: object
+                                        x-kubernetes-map-type: atomic
                                       usernameSecret:
                                         description: UsernameSecret is the secret
                                           selector to the repository username
@@ -11172,6 +11321,7 @@ spec:
                                         required:
                                         - key
                                         type: object
+                                        x-kubernetes-map-type: atomic
                                     required:
                                     - repo
                                     type: object
@@ -11223,6 +11373,7 @@ spec:
                                         required:
                                         - key
                                         type: object
+                                        x-kubernetes-map-type: atomic
                                       krbConfigConfigMap:
                                         description: KrbConfig is the configmap selector
                                           for Kerberos config as string It must be
@@ -11244,6 +11395,7 @@ spec:
                                         required:
                                         - key
                                         type: object
+                                        x-kubernetes-map-type: atomic
                                       krbKeytabSecret:
                                         description: KrbKeytabSecret is the secret
                                           selector for Kerberos keytab Either ccache
@@ -11267,6 +11419,7 @@ spec:
                                         required:
                                         - key
                                         type: object
+                                        x-kubernetes-map-type: atomic
                                       krbRealm:
                                         description: KrbRealm is the Kerberos realm
                                           used with Kerberos keytab It must be set
@@ -11323,6 +11476,7 @@ spec:
                                                 required:
                                                 - key
                                                 type: object
+                                                x-kubernetes-map-type: atomic
                                               usernameSecret:
                                                 description: UsernameSecret is the
                                                   secret selector to the repository
@@ -11346,6 +11500,7 @@ spec:
                                                 required:
                                                 - key
                                                 type: object
+                                                x-kubernetes-map-type: atomic
                                             type: object
                                           clientCert:
                                             description: ClientCertAuth holds necessary
@@ -11374,6 +11529,7 @@ spec:
                                                 required:
                                                 - key
                                                 type: object
+                                                x-kubernetes-map-type: atomic
                                               clientKeySecret:
                                                 description: SecretKeySelector selects
                                                   a key of a Secret.
@@ -11396,6 +11552,7 @@ spec:
                                                 required:
                                                 - key
                                                 type: object
+                                                x-kubernetes-map-type: atomic
                                             type: object
                                           oauth2:
                                             description: OAuth2Auth holds all information
@@ -11424,6 +11581,7 @@ spec:
                                                 required:
                                                 - key
                                                 type: object
+                                                x-kubernetes-map-type: atomic
                                               clientSecretSecret:
                                                 description: SecretKeySelector selects
                                                   a key of a Secret.
@@ -11446,6 +11604,7 @@ spec:
                                                 required:
                                                 - key
                                                 type: object
+                                                x-kubernetes-map-type: atomic
                                               endpointParams:
                                                 items:
                                                   description: EndpointParam is for
@@ -11490,6 +11649,7 @@ spec:
                                                 required:
                                                 - key
                                                 type: object
+                                                x-kubernetes-map-type: atomic
                                             type: object
                                         type: object
                                       headers:
@@ -11559,6 +11719,7 @@ spec:
                                         required:
                                         - key
                                         type: object
+                                        x-kubernetes-map-type: atomic
                                       bucket:
                                         description: Bucket is the name of the bucket
                                         type: string
@@ -11616,6 +11777,7 @@ spec:
                                         required:
                                         - key
                                         type: object
+                                        x-kubernetes-map-type: atomic
                                       securityToken:
                                         description: 'SecurityToken is the user''s
                                           temporary security token. For more details,
@@ -11669,6 +11831,7 @@ spec:
                                         required:
                                         - key
                                         type: object
+                                        x-kubernetes-map-type: atomic
                                       bucket:
                                         description: Bucket is the name of the bucket
                                         type: string
@@ -11730,6 +11893,7 @@ spec:
                                             required:
                                             - key
                                             type: object
+                                            x-kubernetes-map-type: atomic
                                         type: object
                                       endpoint:
                                         description: Endpoint is the hostname of the
@@ -11773,6 +11937,7 @@ spec:
                                         required:
                                         - key
                                         type: object
+                                        x-kubernetes-map-type: atomic
                                       useSDKCreds:
                                         description: UseSDKCreds tells the driver
                                           to figure out credentials based on sdk defaults.
@@ -11856,6 +12021,7 @@ spec:
                                         required:
                                         - key
                                         type: object
+                                        x-kubernetes-map-type: atomic
                                       default:
                                         description: Default specifies a value to
                                           be used if retrieving the value from the
@@ -11942,10 +12108,10 @@ spec:
                                 in which the step was considered failed
                               type: string
                             flags:
-                              description: "Flags is a set of additional options passed
+                              description: 'Flags is a set of additional options passed
                                 to kubectl before submitting a resource I.e. to disable
-                                resource validation: flags: [ \t\"--validate=false\"
-                                \ # disable resource validation ]"
+                                resource validation: flags: [ "--validate=false"  #
+                                disable resource validation ]'
                               items:
                                 type: string
                               type: array
@@ -12053,6 +12219,7 @@ spec:
                                           required:
                                           - key
                                           type: object
+                                          x-kubernetes-map-type: atomic
                                         url:
                                           description: URL of the artifact
                                           type: string
@@ -12078,6 +12245,7 @@ spec:
                                           required:
                                           - key
                                           type: object
+                                          x-kubernetes-map-type: atomic
                                       required:
                                       - url
                                       type: object
@@ -12108,6 +12276,7 @@ spec:
                                           required:
                                           - key
                                           type: object
+                                          x-kubernetes-map-type: atomic
                                         blob:
                                           description: Blob is the blob name (i.e.,
                                             path) in the container where the artifact
@@ -12177,6 +12346,7 @@ spec:
                                           required:
                                           - key
                                           type: object
+                                          x-kubernetes-map-type: atomic
                                       required:
                                       - key
                                       type: object
@@ -12231,6 +12401,7 @@ spec:
                                           required:
                                           - key
                                           type: object
+                                          x-kubernetes-map-type: atomic
                                         repo:
                                           description: Repo is the git repository
                                           type: string
@@ -12265,6 +12436,7 @@ spec:
                                           required:
                                           - key
                                           type: object
+                                          x-kubernetes-map-type: atomic
                                         usernameSecret:
                                           description: UsernameSecret is the secret
                                             selector to the repository username
@@ -12287,6 +12459,7 @@ spec:
                                           required:
                                           - key
                                           type: object
+                                          x-kubernetes-map-type: atomic
                                       required:
                                       - repo
                                       type: object
@@ -12338,6 +12511,7 @@ spec:
                                           required:
                                           - key
                                           type: object
+                                          x-kubernetes-map-type: atomic
                                         krbConfigConfigMap:
                                           description: KrbConfig is the configmap
                                             selector for Kerberos config as string
@@ -12360,6 +12534,7 @@ spec:
                                           required:
                                           - key
                                           type: object
+                                          x-kubernetes-map-type: atomic
                                         krbKeytabSecret:
                                           description: KrbKeytabSecret is the secret
                                             selector for Kerberos keytab Either ccache
@@ -12383,6 +12558,7 @@ spec:
                                           required:
                                           - key
                                           type: object
+                                          x-kubernetes-map-type: atomic
                                         krbRealm:
                                           description: KrbRealm is the Kerberos realm
                                             used with Kerberos keytab It must be set
@@ -12442,6 +12618,7 @@ spec:
                                                   required:
                                                   - key
                                                   type: object
+                                                  x-kubernetes-map-type: atomic
                                                 usernameSecret:
                                                   description: UsernameSecret is the
                                                     secret selector to the repository
@@ -12466,6 +12643,7 @@ spec:
                                                   required:
                                                   - key
                                                   type: object
+                                                  x-kubernetes-map-type: atomic
                                               type: object
                                             clientCert:
                                               description: ClientCertAuth holds necessary
@@ -12495,6 +12673,7 @@ spec:
                                                   required:
                                                   - key
                                                   type: object
+                                                  x-kubernetes-map-type: atomic
                                                 clientKeySecret:
                                                   description: SecretKeySelector selects
                                                     a key of a Secret.
@@ -12518,6 +12697,7 @@ spec:
                                                   required:
                                                   - key
                                                   type: object
+                                                  x-kubernetes-map-type: atomic
                                               type: object
                                             oauth2:
                                               description: OAuth2Auth holds all information
@@ -12547,6 +12727,7 @@ spec:
                                                   required:
                                                   - key
                                                   type: object
+                                                  x-kubernetes-map-type: atomic
                                                 clientSecretSecret:
                                                   description: SecretKeySelector selects
                                                     a key of a Secret.
@@ -12570,6 +12751,7 @@ spec:
                                                   required:
                                                   - key
                                                   type: object
+                                                  x-kubernetes-map-type: atomic
                                                 endpointParams:
                                                   items:
                                                     description: EndpointParam is
@@ -12617,6 +12799,7 @@ spec:
                                                   required:
                                                   - key
                                                   type: object
+                                                  x-kubernetes-map-type: atomic
                                               type: object
                                           type: object
                                         headers:
@@ -12686,6 +12869,7 @@ spec:
                                           required:
                                           - key
                                           type: object
+                                          x-kubernetes-map-type: atomic
                                         bucket:
                                           description: Bucket is the name of the bucket
                                           type: string
@@ -12743,6 +12927,7 @@ spec:
                                           required:
                                           - key
                                           type: object
+                                          x-kubernetes-map-type: atomic
                                         securityToken:
                                           description: 'SecurityToken is the user''s
                                             temporary security token. For more details,
@@ -12796,6 +12981,7 @@ spec:
                                           required:
                                           - key
                                           type: object
+                                          x-kubernetes-map-type: atomic
                                         bucket:
                                           description: Bucket is the name of the bucket
                                           type: string
@@ -12858,6 +13044,7 @@ spec:
                                               required:
                                               - key
                                               type: object
+                                              x-kubernetes-map-type: atomic
                                           type: object
                                         endpoint:
                                           description: Endpoint is the hostname of
@@ -12901,6 +13088,7 @@ spec:
                                           required:
                                           - key
                                           type: object
+                                          x-kubernetes-map-type: atomic
                                         useSDKCreds:
                                           description: UseSDKCreds tells the driver
                                             to figure out credentials based on sdk
@@ -13077,6 +13265,7 @@ spec:
                                         required:
                                         - key
                                         type: object
+                                        x-kubernetes-map-type: atomic
                                       fieldRef:
                                         description: 'Selects a field of the pod:
                                           supports metadata.name, metadata.namespace,
@@ -13096,6 +13285,7 @@ spec:
                                         required:
                                         - fieldPath
                                         type: object
+                                        x-kubernetes-map-type: atomic
                                       resourceFieldRef:
                                         description: 'Selects a resource of the container:
                                           only resources limits and requests (limits.cpu,
@@ -13122,6 +13312,7 @@ spec:
                                         required:
                                         - resource
                                         type: object
+                                        x-kubernetes-map-type: atomic
                                       secretKeyRef:
                                         description: Selects a key of a secret in
                                           the pod's namespace
@@ -13144,6 +13335,7 @@ spec:
                                         required:
                                         - key
                                         type: object
+                                        x-kubernetes-map-type: atomic
                                     type: object
                                 required:
                                 - name
@@ -13176,6 +13368,7 @@ spec:
                                           must be defined
                                         type: boolean
                                     type: object
+                                    x-kubernetes-map-type: atomic
                                   prefix:
                                     description: An optional identifier to prepend
                                       to each key in the ConfigMap. Must be a C_IDENTIFIER.
@@ -13194,6 +13387,7 @@ spec:
                                           be defined
                                         type: boolean
                                     type: object
+                                    x-kubernetes-map-type: atomic
                                 type: object
                               type: array
                             image:
@@ -14559,6 +14753,7 @@ spec:
                                           required:
                                           - key
                                           type: object
+                                          x-kubernetes-map-type: atomic
                                         fieldRef:
                                           description: 'Selects a field of the pod:
                                             supports metadata.name, metadata.namespace,
@@ -14578,6 +14773,7 @@ spec:
                                           required:
                                           - fieldPath
                                           type: object
+                                          x-kubernetes-map-type: atomic
                                         resourceFieldRef:
                                           description: 'Selects a resource of the
                                             container: only resources limits and requests
@@ -14605,6 +14801,7 @@ spec:
                                           required:
                                           - resource
                                           type: object
+                                          x-kubernetes-map-type: atomic
                                         secretKeyRef:
                                           description: Selects a key of a secret in
                                             the pod's namespace
@@ -14627,6 +14824,7 @@ spec:
                                           required:
                                           - key
                                           type: object
+                                          x-kubernetes-map-type: atomic
                                       type: object
                                   required:
                                   - name
@@ -14659,6 +14857,7 @@ spec:
                                             must be defined
                                           type: boolean
                                       type: object
+                                      x-kubernetes-map-type: atomic
                                     prefix:
                                       description: An optional identifier to prepend
                                         to each key in the ConfigMap. Must be a C_IDENTIFIER.
@@ -14677,6 +14876,7 @@ spec:
                                             must be defined
                                           type: boolean
                                       type: object
+                                      x-kubernetes-map-type: atomic
                                   type: object
                                 type: array
                               image:
@@ -15858,6 +16058,7 @@ spec:
                                   required:
                                   - key
                                   type: object
+                                  x-kubernetes-map-type: atomic
                               type: object
                           type: object
                         timeout:
@@ -16053,6 +16254,7 @@ spec:
                                           kind, uid?'
                                         type: string
                                     type: object
+                                    x-kubernetes-map-type: atomic
                                   user:
                                     description: 'user is optional: User is the rados
                                       user name, default is admin More info: https://examples.k8s.io/volumes/cephfs/README.md#how-to-use-it'
@@ -16089,6 +16291,7 @@ spec:
                                           kind, uid?'
                                         type: string
                                     type: object
+                                    x-kubernetes-map-type: atomic
                                   volumeID:
                                     description: 'volumeID used to identify the volume
                                       in cinder. More info: https://examples.k8s.io/mysql-cinder-pd/README.md'
@@ -16170,6 +16373,7 @@ spec:
                                       or its keys must be defined
                                     type: boolean
                                 type: object
+                                x-kubernetes-map-type: atomic
                               csi:
                                 description: csi (Container Storage Interface) represents
                                   ephemeral storage that is handled by certain external
@@ -16204,6 +16408,7 @@ spec:
                                           kind, uid?'
                                         type: string
                                     type: object
+                                    x-kubernetes-map-type: atomic
                                   readOnly:
                                     description: readOnly specifies a read-only configuration
                                       for the volume. Defaults to false (read/write).
@@ -16263,6 +16468,7 @@ spec:
                                           required:
                                           - fieldPath
                                           type: object
+                                          x-kubernetes-map-type: atomic
                                         mode:
                                           description: 'Optional: mode bits used to
                                             set permissions on this file, must be
@@ -16311,6 +16517,7 @@ spec:
                                           required:
                                           - resource
                                           type: object
+                                          x-kubernetes-map-type: atomic
                                       required:
                                       - path
                                       type: object
@@ -16351,20 +16558,19 @@ spec:
                                   when the pod is removed. \n Use this if: a) the
                                   volume is only needed while the pod runs, b) features
                                   of normal volumes like restoring from snapshot or
-                                  capacity    tracking are needed, c) the storage
-                                  driver is specified through a storage class, and
-                                  d) the storage driver supports dynamic volume provisioning
-                                  through    a PersistentVolumeClaim (see EphemeralVolumeSource
-                                  for more    information on the connection between
-                                  this volume type    and PersistentVolumeClaim).
-                                  \n Use PersistentVolumeClaim or one of the vendor-specific
-                                  APIs for volumes that persist for longer than the
-                                  lifecycle of an individual pod. \n Use CSI for light-weight
-                                  local ephemeral volumes if the CSI driver is meant
-                                  to be used that way - see the documentation of the
-                                  driver for more information. \n A pod can use both
-                                  types of ephemeral volumes and persistent volumes
-                                  at the same time."
+                                  capacity tracking are needed, c) the storage driver
+                                  is specified through a storage class, and d) the
+                                  storage driver supports dynamic volume provisioning
+                                  through a PersistentVolumeClaim (see EphemeralVolumeSource
+                                  for more information on the connection between this
+                                  volume type and PersistentVolumeClaim). \n Use PersistentVolumeClaim
+                                  or one of the vendor-specific APIs for volumes that
+                                  persist for longer than the lifecycle of an individual
+                                  pod. \n Use CSI for light-weight local ephemeral
+                                  volumes if the CSI driver is meant to be used that
+                                  way - see the documentation of the driver for more
+                                  information. \n A pod can use both types of ephemeral
+                                  volumes and persistent volumes at the same time."
                                 properties:
                                   volumeClaimTemplate:
                                     description: "Will be used to create a stand-alone
@@ -16445,6 +16651,7 @@ spec:
                                             - kind
                                             - name
                                             type: object
+                                            x-kubernetes-map-type: atomic
                                           dataSourceRef:
                                             description: 'dataSourceRef specifies
                                               the object from which to populate the
@@ -16467,14 +16674,15 @@ spec:
                                               is non-empty. There are two important
                                               differences between DataSource and DataSourceRef:
                                               * While DataSource only allows two specific
-                                              types of objects, DataSourceRef   allows
+                                              types of objects, DataSourceRef allows
                                               any non-core object, as well as PersistentVolumeClaim
                                               objects. * While DataSource ignores
-                                              disallowed values (dropping them), DataSourceRef   preserves
-                                              all values, and generates an error if
-                                              a disallowed value is   specified. (Beta)
-                                              Using this field requires the AnyVolumeDataSource
-                                              feature gate to be enabled.'
+                                              disallowed values (dropping them), DataSourceRef
+                                              preserves all values, and generates
+                                              an error if a disallowed value is specified.
+                                              (Beta) Using this field requires the
+                                              AnyVolumeDataSource feature gate to
+                                              be enabled.'
                                             properties:
                                               apiGroup:
                                                 description: APIGroup is the group
@@ -16496,6 +16704,7 @@ spec:
                                             - kind
                                             - name
                                             type: object
+                                            x-kubernetes-map-type: atomic
                                           resources:
                                             description: 'resources represents the
                                               minimum resources the volume should
@@ -16591,6 +16800,7 @@ spec:
                                                   ANDed.
                                                 type: object
                                             type: object
+                                            x-kubernetes-map-type: atomic
                                           storageClassName:
                                             description: 'storageClassName is the
                                               name of the StorageClass required by
@@ -16692,6 +16902,7 @@ spec:
                                           kind, uid?'
                                         type: string
                                     type: object
+                                    x-kubernetes-map-type: atomic
                                 required:
                                 - driver
                                 type: object
@@ -16885,6 +17096,7 @@ spec:
                                           kind, uid?'
                                         type: string
                                     type: object
+                                    x-kubernetes-map-type: atomic
                                   targetPortal:
                                     description: targetPortal is iSCSI Target Portal.
                                       The Portal is either an IP or ip_addr:port if
@@ -17072,6 +17284,7 @@ spec:
                                                 defined
                                               type: boolean
                                           type: object
+                                          x-kubernetes-map-type: atomic
                                         downwardAPI:
                                           description: downwardAPI information about
                                             the downwardAPI data to project
@@ -17104,6 +17317,7 @@ spec:
                                                     required:
                                                     - fieldPath
                                                     type: object
+                                                    x-kubernetes-map-type: atomic
                                                   mode:
                                                     description: 'Optional: mode bits
                                                       used to set permissions on this
@@ -17159,6 +17373,7 @@ spec:
                                                     required:
                                                     - resource
                                                     type: object
+                                                    x-kubernetes-map-type: atomic
                                                 required:
                                                 - path
                                                 type: object
@@ -17234,6 +17449,7 @@ spec:
                                                 be defined
                                               type: boolean
                                           type: object
+                                          x-kubernetes-map-type: atomic
                                         serviceAccountToken:
                                           description: serviceAccountToken is information
                                             about the serviceAccountToken data to
@@ -17361,6 +17577,7 @@ spec:
                                           kind, uid?'
                                         type: string
                                     type: object
+                                    x-kubernetes-map-type: atomic
                                   user:
                                     description: 'user is the rados user name. Default
                                       is admin. More info: https://examples.k8s.io/volumes/rbd/README.md#how-to-use-it'
@@ -17406,6 +17623,7 @@ spec:
                                           kind, uid?'
                                         type: string
                                     type: object
+                                    x-kubernetes-map-type: atomic
                                   sslEnabled:
                                     description: sslEnabled Flag enable/disable SSL
                                       communication with Gateway, default false
@@ -17533,6 +17751,7 @@ spec:
                                           kind, uid?'
                                         type: string
                                     type: object
+                                    x-kubernetes-map-type: atomic
                                   volumeName:
                                     description: volumeName is the human-readable
                                       name of the StorageOS volume.  Volume names
@@ -17640,9 +17859,3 @@ spec:
     storage: true
     subresources:
       status: {}
-status:
-  acceptedNames:
-    kind: ""
-    plural: ""
-  conditions: []
-  storedVersions: []
