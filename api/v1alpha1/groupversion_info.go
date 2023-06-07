@@ -15,8 +15,8 @@ limitations under the License.
 */
 
 // Package v1alpha1 contains API Schema definitions for the test v1alpha1 API group
-//+kubebuilder:object:generate=true
-//+groupName=test.plural.sh
+// +kubebuilder:object:generate=true
+// +groupName=test.plural.sh
 package v1alpha1
 
 import (
