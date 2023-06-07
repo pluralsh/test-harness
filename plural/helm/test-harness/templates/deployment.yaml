@@ -32,9 +32,6 @@ spec:
         envFrom:
         - secretRef:
             name: operator-env
-        env:
-        - name: DEPLOYED_AT
-          value: {{ now | unixEpoch | quote }}
         securityContext:
           allowPrivilegeEscalation: false
         ports:
