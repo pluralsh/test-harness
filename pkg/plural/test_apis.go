@@ -29,6 +29,7 @@ type Test struct {
 	Status     Status
 	Name       string
 	PromoteTag string
+	Tags       []string
 	Steps      []*TestStep
 }
 

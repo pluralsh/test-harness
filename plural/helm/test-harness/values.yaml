@@ -3,7 +3,7 @@ replicaCount: 2
 image:
   repository: dkr.plural.sh/test-harness/operator
   pullPolicy: IfNotPresent
-  tag: 0.2.3
+  tag: 0.2.4
 
 imagePullSecrets: []
 nameOverride: ""
