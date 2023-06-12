@@ -1,0 +1,15 @@
+- op: replace
+  path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/steps/items/properties/template/properties/steps/items
+  value:
+    type: array
+    items:
+      type: object
+      x-kubernetes-map-type: atomic
+      x-kubernetes-preserve-unknown-fields: true
+- op: replace
+  path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/steps/items/properties/template/properties/dag/properties/tasks/items/properties/inline
+  value:
+    description: Inline is the template. Template must be empty if this is declared (and vice-versa).
+    type: object
+    x-kubernetes-map-type: "atomic"
+    x-kubernetes-preserve-unknown-fields: true
