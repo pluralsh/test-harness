@@ -3,7 +3,7 @@ module github.com/pluralsh/test-harness
 go 1.18
 
 require (
-	github.com/Douvi/gophoenix v0.0.53-0.20210415050613-547636b5860b
+	github.com/Douvi/gophoenix v0.0.63
 	github.com/argoproj/argo-workflows/v3 v3.4.7
 	github.com/go-logr/logr v1.2.3
 	github.com/onsi/ginkgo v1.16.5
@@ -53,6 +53,7 @@ require (
 	github.com/mattn/go-runewidth v0.0.13 // indirect
 	github.com/matttproud/golang_protobuf_extensions v1.0.4 // indirect
 	github.com/mitchellh/colorstring v0.0.0-20190213212951-d06e56a500db // indirect
+	github.com/mitchellh/mapstructure v1.5.0 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.2 // indirect
 	github.com/munnerz/goautoneg v0.0.0-20191010083416-a7dc8b61c822 // indirect
